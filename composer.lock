@@ -191,7 +191,7 @@
             "time": "2014-03-05 15:03:52"
         },
         {
-            "name": "n98/junit-xml",
+            "name": "imi/junit-xml",
             "version": "1.0.0",
             "source": {
                 "type": "git",

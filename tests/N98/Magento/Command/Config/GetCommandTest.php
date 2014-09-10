@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace IMI\Contao\Command\Config;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class GetCommandTest extends TestCase
 {
@@ -21,7 +21,7 @@ class GetCommandTest extends TestCase
         $commandTester->execute(
             array(
                  'command' => $setCommand->getName(),
-                 'path'    => 'n98_magerun/foo/bar',
+                 'path'    => 'imi_conrun/foo/bar',
                  'value'   => '1234',
             )
         );
@@ -30,32 +30,32 @@ class GetCommandTest extends TestCase
         $commandTester->execute(
             array(
                  'command' => $getCommand->getName(),
-                 'path'    => 'n98_magerun/foo/bar',
+                 'path'    => 'imi_conrun/foo/bar',
             )
         );
-        $this->assertContains('| n98_magerun/foo/bar | default | 0        | 1234  |', $commandTester->getDisplay());
+        $this->assertContains('| imi_conrun/foo/bar | default | 0        | 1234  |', $commandTester->getDisplay());
 
         $commandTester->execute(
             array(
                  'command'         => $getCommand->getName(),
-                 'path'            => 'n98_magerun/foo/bar',
+                 'path'            => 'imi_conrun/foo/bar',
                  '--update-script' => true
             )
         );
         $this->assertContains(
-            "\$installer->setConfigData('n98_magerun/foo/bar', '1234');",
+            "\$installer->setConfigData('imi_conrun/foo/bar', '1234');",
             $commandTester->getDisplay()
         );
 
         $commandTester->execute(
             array(
                  'command'          => $getCommand->getName(),
-                 'path'             => 'n98_magerun/foo/bar',
-                 '--magerun-script' => true
+                 'path'             => 'imi_conrun/foo/bar',
+                 '--conrun-script' => true
             )
         );
         $this->assertContains(
-            "config:set n98_magerun/foo/bar --scope-id=0 --scope=default '1234'",
+            "config:set imi_conrun/foo/bar --scope-id=0 --scope=default '1234'",
             $commandTester->getDisplay()
         );
 
@@ -65,12 +65,12 @@ class GetCommandTest extends TestCase
         $commandTester->execute(
             array(
                 'command'  => $getCommand->getName(),
-                'path'     => 'n98_magerun/foo/bar',
+                'path'     => 'imi_conrun/foo/bar',
                 '--format' => 'csv',
             )
         );
         $this->assertContains('Path,Scope,Scope-ID,Value', $commandTester->getDisplay());
-        $this->assertContains('n98_magerun/foo/bar,default,0,1234', $commandTester->getDisplay());
+        $this->assertContains('imi_conrun/foo/bar,default,0,1234', $commandTester->getDisplay());
 
         /**
          * Dump XML
@@ -78,7 +78,7 @@ class GetCommandTest extends TestCase
         $commandTester->execute(
             array(
                 'command'  => $getCommand->getName(),
-                'path'     => 'n98_magerun/foo/bar',
+                'path'     => 'imi_conrun/foo/bar',
                 '--format' => 'xml',
             )
         );
@@ -91,7 +91,7 @@ class GetCommandTest extends TestCase
         $commandTester->execute(
             array(
                 'command'  => $getCommand->getName(),
-                'path'     => 'n98_magerun/foo/bar',
+                'path'     => 'imi_conrun/foo/bar',
                 '--format' => 'json',
             )
         );

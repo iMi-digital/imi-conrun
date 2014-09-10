@@ -1,15 +1,15 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Module\Rewrite;
+namespace IMI\Contao\Command\Developer\Module\Rewrite;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 /**
  * Class ConflictsCommandTest
  *
  * @TODO Check with simulated conflict
- * @package N98\Magento\Command\Developer\Module\Rewrite
+ * @package IMI\Contao\Command\Developer\Module\Rewrite
  */
 class ConflictsCommandTest extends TestCase
 {

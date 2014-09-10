@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Util\Console\Helper;
+namespace IMI\Util\Console\Helper;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 
 class DatabaseHelperTest extends TestCase
@@ -21,7 +21,7 @@ class DatabaseHelperTest extends TestCase
      */
     public function testHelperInstance()
     {
-        $this->assertInstanceOf('\N98\Util\Console\Helper\DatabaseHelper', $this->getHelper());
+        $this->assertInstanceOf('\IMI\Util\Console\Helper\DatabaseHelper', $this->getHelper());
     }
 
     /**

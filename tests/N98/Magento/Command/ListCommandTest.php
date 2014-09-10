@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command;
+namespace IMI\Contao\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ListCommandTest extends TestCase
 {
@@ -19,7 +19,7 @@ class ListCommandTest extends TestCase
         );
     
         $this->assertContains(
-            sprintf('n98-magerun version %s by netz98 new media GmbH', $this->getApplication()->getVersion()),
+            sprintf('imi-conrun version %s by netz98 new media GmbH', $this->getApplication()->getVersion()),
             $commandTester->getDisplay()
         );
     }

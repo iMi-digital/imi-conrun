@@ -1,7 +1,7 @@
 <?php
 
-if (!class_exists('N98_Magerun_Bootstrap')) {
-    class N98_Magerun_Bootstrap
+if (!class_exists('IMI_Contrun_Bootstrap')) {
+    class IMI_Contrun_Bootstrap
     {
         public static function includeIfExists($file)
         {
@@ -16,8 +16,8 @@ if (!class_exists('N98_Magerun_Bootstrap')) {
          */
         public static function getLoader()
         {
-            if ((!$loader = \N98_Magerun_Bootstrap::includeIfExists(__DIR__.'/../vendor/autoload.php'))
-                && (!$loader = \N98_Magerun_Bootstrap::includeIfExists(__DIR__.'/../../../autoload.php'))) {
+            if ((!$loader = \IMI_Contrun_Bootstrap::includeIfExists(__DIR__.'/../vendor/autoload.php'))
+                && (!$loader = \IMI_Contrun_Bootstrap::includeIfExists(__DIR__.'/../../../autoload.php'))) {
                 throw new \ErrorException('You must set up the project dependencies, run the following commands:'.PHP_EOL.
                     'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
                     'php composer.phar install'.PHP_EOL);
@@ -29,8 +29,8 @@ if (!class_exists('N98_Magerun_Bootstrap')) {
 }
 
 try {
-    $loader = \N98_Magerun_Bootstrap::getLoader();
-    $application = new \N98\Magento\Application($loader);
+    $loader = \IMI_Contrun_Bootstrap::getLoader();
+    $application = new \IMI\Contao\Application($loader);
 
     return $application;
 

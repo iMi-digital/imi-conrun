@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Theme;
+namespace IMI\Contao\Command\Developer\Theme;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ListCommandTest extends TestCase
 {

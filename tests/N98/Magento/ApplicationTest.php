@@ -1,12 +1,12 @@
 <?php
 
-namespace N98\Magento;
+namespace IMI\Contao;
 
-use N98\Util\ArrayFunctions;
+use IMI\Util\ArrayFunctions;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 use Symfony\Component\Yaml\Yaml;
 use org\bovigo\vfs\vfsStream;
 
@@ -18,31 +18,31 @@ class ApplicationTest extends TestCase
          * Check autoloading
          */
         $application = require __DIR__ . '/../../../src/bootstrap.php';
-        $application->setMagentoRootFolder(getenv('N98_MAGERUN_TEST_MAGENTO_ROOT'));
+        $application->setContaoRootFolder(getenv('IMI_MAGERUN_TEST_MAGENTO_ROOT'));
 
         /* @var $application Application */
-        $this->assertInstanceOf('\N98\Magento\Application', $application);
+        $this->assertInstanceOf('\IMI\Contao\Application', $application);
         $loader = $application->getAutoloader();
         $this->assertInstanceOf('\Composer\Autoload\ClassLoader', $loader);
 
         /**
          * Check version
          */
-        $this->assertEquals(\N98\Magento\Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../version.txt')));
+        $this->assertEquals(\IMI\Contao\Application::APP_VERSION, trim(file_get_contents(__DIR__ . '/../../../version.txt')));
 
         /* @var $loader \Composer\Autoload\ClassLoader */
         $prefixes = $loader->getPrefixes();
-        $this->assertArrayHasKey('N98', $prefixes);
+        $this->assertArrayHasKey('IMI', $prefixes);
 
         $distConfigArray = Yaml::parse(file_get_contents(__DIR__ . '/../../../config.yaml'));
 
         $configArray = array(
             'autoloaders' => array(
-                'N98MagerunTest' => __DIR__ . '/_ApplicationTestSrc',
+                'IMIContrunTest' => __DIR__ . '/_ApplicationTestSrc',
             ),
             'commands' => array(
                 'customCommands' => array(
-                    0 => 'N98MagerunTest\TestDummyCommand'
+                    0 => 'IMIContrunTest\TestDummyCommand'
                 ),
                 'aliases' => array(
                     array(
@@ -52,7 +52,7 @@ class ApplicationTest extends TestCase
             ),
             'init' => array(
                 'options' => array(
-                    'config_model' => 'N98MagerunTest\AlternativeConfigModel',
+                    'config_model' => 'IMIContrunTest\AlternativeConfigModel',
                 )
             )
         );
@@ -63,10 +63,10 @@ class ApplicationTest extends TestCase
 
         // Check if autoloaders, commands and aliases are registered
         $prefixes = $loader->getPrefixes();
-        $this->assertArrayHasKey('N98MagerunTest', $prefixes);
+        $this->assertArrayHasKey('IMIContrunTest', $prefixes);
 
-        $testDummyCommand = $application->find('n98mageruntest:test:dummy');
-        $this->assertInstanceOf('\N98MagerunTest\TestDummyCommand', $testDummyCommand);
+        $testDummyCommand = $application->find('imiconruntest:test:dummy');
+        $this->assertInstanceOf('\IMIContrunTest\TestDummyCommand', $testDummyCommand);
 
         $commandTester = new CommandTester($testDummyCommand);
         $commandTester->execute(
@@ -78,15 +78,15 @@ class ApplicationTest extends TestCase
         $this->assertTrue($application->getDefinition()->hasOption('root-dir'));
 
         // Test alternative config model
-        $application->initMagento();
+        $application->initContao();
         if (version_compare(\Mage::getVersion(), '1.7.0.2', '>=')) {
-            // config_model option is only available in Magento CE >1.6
-            $this->assertInstanceOf('\N98MagerunTest\AlternativeConfigModel', \Mage::getConfig());
+            // config_model option is only available in Contao CE >1.6
+            $this->assertInstanceOf('\IMIContrunTest\AlternativeConfigModel', \Mage::getConfig());
         }
 
 
         // check alias
-        $this->assertInstanceOf('\N98\Magento\Command\Cache\ListCommand', $application->find('cl'));
+        $this->assertInstanceOf('\IMI\Contao\Command\Cache\ListCommand', $application->find('cl'));
     }
 
     public function testPlugins()
@@ -95,7 +95,7 @@ class ApplicationTest extends TestCase
          * Check autoloading
          */
         $application = require __DIR__ . '/../../../src/bootstrap.php';
-        $application->setMagentoRootFolder(getenv('N98_MAGERUN_TEST_MAGENTO_ROOT'));
+        $application->setContaoRootFolder(getenv('IMI_MAGERUN_TEST_MAGENTO_ROOT'));
 
         // Load plugin config
         $injectConfig = array(
@@ -123,8 +123,8 @@ class ApplicationTest extends TestCase
                 ),
                 'vendor' => array(
                     'acme' => array(
-                        'magerun-test-module' => array(
-                            'n98-magerun.yaml' => file_get_contents(__DIR__ . '/_ApplicationTestComposer/n98-magerun.yaml'),
+                        'conrun-test-module' => array(
+                            'imi-conrun.yaml' => file_get_contents(__DIR__ . '/_ApplicationTestComposer/imi-conrun.yaml'),
                             'src' => array(
                                 'Acme' => array(
                                     'FooCommand.php' => file_get_contents(__DIR__ . '/_ApplicationTestComposer/FooCommand.php'),
@@ -132,11 +132,11 @@ class ApplicationTest extends TestCase
                             )
                         )
                     ),
-                    'n98' => array(
-                        'magerun' => array(
+                    'imi' => array(
+                        'conrun' => array(
                             'src' => array(
-                                'N98' => array(
-                                    'Magento' => array(
+                                'IMI' => array(
+                                    'Contao' => array(
                                         'Command' => array(
                                             'ConfigurationLoader.php' => '',
                                         ),
@@ -150,18 +150,18 @@ class ApplicationTest extends TestCase
         );
 
         $configurationLoader = $this->getMock(
-            '\N98\Magento\Command\ConfigurationLoader',
+            '\IMI\Contao\Command\ConfigurationLoader',
             array('getConfigurationLoaderDir'),
             array(array(), false, new NullOutput())
         );
         $configurationLoader
             ->expects($this->any())
             ->method('getConfigurationLoaderDir')
-            ->will($this->returnValue(vfsStream::url('root/vendor/n98/magerun/src/N98/Magento/Command')));
+            ->will($this->returnValue(vfsStream::url('root/vendor/imi/conrun/src/IMI/Contao/Command')));
 
         $application = require __DIR__ . '/../../../src/bootstrap.php';
         /* @var $application Application */
-        $application->setMagentoRootFolder(vfsStream::url('root/htdocs'));
+        $application->setContaoRootFolder(vfsStream::url('root/htdocs'));
         $application->setConfigurationLoader($configurationLoader);
         $application->init();
 

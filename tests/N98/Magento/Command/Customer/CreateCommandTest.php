@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Customer;
+namespace IMI\Contao\Command\Customer;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class CreateCommandTest extends TestCase
 {
@@ -15,7 +15,7 @@ class CreateCommandTest extends TestCase
         $command = $this->_getCommand();
         $generatedEmail = uniqid() . '@example.com';
 
-        $this->getApplication()->initMagento();
+        $this->getApplication()->initContao();
 
         $website = \Mage::app()->getWebsite();
 
@@ -50,7 +50,7 @@ class CreateCommandTest extends TestCase
 
         // mock dialog
         // We mock the DialogHelper
-        $dialog = $this->getMock('N98\Util\Console\Helper\ParameterHelper', array('askPassword'));
+        $dialog = $this->getMock('IMI\Util\Console\Helper\ParameterHelper', array('askPassword'));
         $dialog->expects($this->at(0))
             ->method('askPassword')
             ->will($this->returnValue(true)); // The user confirms

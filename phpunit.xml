@@ -15,7 +15,7 @@
          stopOnSkipped="false"
          strict="false">
     <testsuites>
-        <testsuite name="n98-magerun Tests">
+        <testsuite name="imi-conrun Tests">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>

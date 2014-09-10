@@ -1,14 +1,14 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Module\Dependencies;
+namespace IMI\Contao\Command\Developer\Module\Dependencies;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 /**
  * Class OnCommandTest
  *
- * @package N98\Magento\Command\Developer\Module\Dependencies
+ * @package IMI\Contao\Command\Developer\Module\Dependencies
  */
 class FromCommandTest extends TestCase
 {

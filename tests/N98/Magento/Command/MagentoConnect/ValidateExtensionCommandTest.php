@@ -1,20 +1,20 @@
 <?php
 
-namespace N98\Magento\Command\MagentoConnect;
-use N98\Magento\Command\PHPUnit\TestCase;
+namespace IMI\Contao\Command\ContaoConnect;
+use IMI\Contao\Command\PHPUnit\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ValidateExtensionCommandTest extends TestCase
 {
     public function testSetup()
     {
-        $this->getApplication()->initMagento();
+        $this->getApplication()->initContao();
         if (version_compare(\Mage::getVersion(), '1.4.2.0', '<=')) {
             $this->markTestSkipped('Skip Test - mage cli script does not exist.');
         }
 
         $application = $this->getApplication();
-        $commandMock = $this->getMockBuilder('N98\Magento\Command\MagentoConnect\ValidateExtensionCommand')
+        $commandMock = $this->getMockBuilder('IMI\Contao\Command\ContaoConnect\ValidateExtensionCommand')
             ->setMockClassName('ValidateExtensionCommandMock')
             ->enableOriginalClone()
             ->setMethods(array('_getDownloaderConfigPath'))

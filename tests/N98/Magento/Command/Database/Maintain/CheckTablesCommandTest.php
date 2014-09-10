@@ -1,14 +1,14 @@
 <?php
 
-namespace N98\Magento\Command\Database\Maintain;
+namespace IMI\Contao\Command\Database\Maintain;
 
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 /**
- * @see \N98\Magento\Command\Database\Maintain\CheckTablesCommand
+ * @see \IMI\Contao\Command\Database\Maintain\CheckTablesCommand
  */
 class CheckTablesTest extends TestCase
 {

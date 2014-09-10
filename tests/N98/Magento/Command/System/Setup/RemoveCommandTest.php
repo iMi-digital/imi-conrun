@@ -1,13 +1,13 @@
 <?php
 
-namespace N98\Magento\Command\System\Setup;
+namespace IMI\Contao\Command\System\Setup;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 /**
  * Class RemoveCommandTest
- * @package N98\Magento\Command\System\Setup
+ * @package IMI\Contao\Command\System\Setup
  * @author Aydin Hassan <aydin@hotmail.co.uk>
  */
 class RemoveCommandTest extends TestCase
@@ -29,7 +29,7 @@ class RemoveCommandTest extends TestCase
             ->method('getConnection')
             ->will($this->returnValue($mockAdapter));
 
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\RemoveCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\RemoveCommand')
             ->setMethods(array('_getModel'))
             ->getMock();
 
@@ -71,7 +71,7 @@ class RemoveCommandTest extends TestCase
             ->method('getConnection')
             ->will($this->returnValue($mockAdapter));
 
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\RemoveCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\RemoveCommand')
             ->setMethods(array('_getModel'))
             ->getMock();
 
@@ -119,7 +119,7 @@ class RemoveCommandTest extends TestCase
             ->with('core_resource')
             ->will($this->returnValue('core_resource'));
 
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\RemoveCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\RemoveCommand')
             ->setMethods(array('_getModel'))
             ->getMock();
 
@@ -183,7 +183,7 @@ class RemoveCommandTest extends TestCase
     public function testCommandReturnsEarlyIfNoSetupResourcesForModule()
     {
 
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\RemoveCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\RemoveCommand')
             ->setMethods(array('getModuleSetupResources'))
             ->getMock();
 

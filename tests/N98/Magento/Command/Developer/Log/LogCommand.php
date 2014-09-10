@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Log;
+namespace IMI\Contao\Command\Developer\Log;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class LogCommandTest extends TestCase
 {

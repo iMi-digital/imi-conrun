@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Indexer;
+namespace IMI\Contao\Command\Indexer;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ReindexCommandTest extends TestCase
 {

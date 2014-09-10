@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Script\Repository;
+namespace IMI\Contao\Command\Script\Repository;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class RunCommandTest extends TestCase
 {
@@ -27,6 +27,6 @@ class RunCommandTest extends TestCase
 
         // Runs sys:info -> Check for any output
         $this->assertContains('Vendors (core)', $commandTester->getDisplay());
-        $this->assertContains(__DIR__ . '/_scripts/hello-world.magerun', $commandTester->getDisplay());
+        $this->assertContains(__DIR__ . '/_scripts/hello-world.conrun', $commandTester->getDisplay());
     }
 }

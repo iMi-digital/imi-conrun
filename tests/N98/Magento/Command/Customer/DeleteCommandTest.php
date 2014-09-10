@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Customer;
+namespace IMI\Contao\Command\Customer;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class DeleteCommandTest extends TestCase
 {
@@ -19,7 +19,7 @@ class DeleteCommandTest extends TestCase
     protected function getResourceClassName($mage1Code, $mage2Code)
     {
         // Get correct model classes to mock
-        if ($this->application->getMagentoMajorVersion() == 2) {
+        if ($this->application->getContaoMajorVersion() == 2) {
             return get_class(\Mage::getResourceModel($mage2Code));
         } else {
             return get_class(\Mage::getResourceModel($mage1Code));
@@ -29,7 +29,7 @@ class DeleteCommandTest extends TestCase
     protected function getModelClassName($mage1Code, $mage2Code)
     {
         // Get correct model classes to mock
-        if ($this->application->getMagentoMajorVersion() == 2) {
+        if ($this->application->getContaoMajorVersion() == 2) {
             return get_class(\Mage::getModel($mage2Code));
         } else {
             return get_class(\Mage::getModel($mage1Code));
@@ -61,12 +61,12 @@ class DeleteCommandTest extends TestCase
     public function setUp()
     {
         $this->application = $this->getApplication();
-        $this->application->initMagento();
+        $this->application->initContao();
 
         $this->customerModel = $this->getCustomerModel(array('loadByEmail', 'load', 'getId', 'delete', 'setWebsiteId'));
         $this->customerCollection = $this->getCustomerCollection(array('addAttributeToSelect', 'addAttributeToFilter'));
 
-        $this->command = $this->getMockBuilder('\N98\Magento\Command\Customer\DeleteCommand')
+        $this->command = $this->getMockBuilder('\IMI\Contao\Command\Customer\DeleteCommand')
             ->setMethods(array(
                 'getCustomerModel',
                 'getCustomerCollection',
@@ -657,7 +657,7 @@ class DeleteCommandTest extends TestCase
 
     public function testBatchDelete()
     {
-        $command = $this->getMockBuilder('\N98\Magento\Command\Customer\DeleteCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\Customer\DeleteCommand')
             ->setMethods(array('deleteCustomer'))
             ->disableOriginalConstructor()
             ->getMock();

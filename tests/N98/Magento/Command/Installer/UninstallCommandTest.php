@@ -1,34 +1,34 @@
 <?php
 
-namespace N98\Magento\Command\Installer;
+namespace IMI\Contao\Command\Installer;
 
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 use org\bovigo\vfs\vfsStream;
 
 class UninstallCommandTest extends TestCase
 {
     /**
-     * @return string Get Magento Root
+     * @return string Get Contao Root
      */
     protected function getMageRoot()
     {
-        return getenv('N98_MAGERUN_TEST_MAGENTO_ROOT');
+        return getenv('IMI_MAGERUN_TEST_MAGENTO_ROOT');
     }
 
     /**
-     * @return string Get Magento local.xml file location
+     * @return string Get Contao local.xml file location
      */
-    protected function getMagentoFile()
+    protected function getContaoFile()
     {
-        return getenv('N98_MAGERUN_TEST_MAGENTO_ROOT') . "/app/etc/local.xml";
+        return getenv('IMI_MAGERUN_TEST_MAGENTO_ROOT') . "/app/etc/local.xml";
     }
 
 
     /**
-     * Check that uninstall -f actually removes magento
+     * Check that uninstall -f actually removes contao
      */
     public function testUninstallForceActuallyRemoves()
     {
@@ -49,12 +49,12 @@ class UninstallCommandTest extends TestCase
         $this->assertContains("Dropped database", $commandTester->getDisplay());
         $this->assertContains("Remove directory " . $this->getMageRoot(), $commandTester->getDisplay());
         $this->assertContains("Done", $commandTester->getDisplay());
-        $this->assertFileNotExists($this->getMagentoFile());
+        $this->assertFileNotExists($this->getContaoFile());
         */
     }
 
     /**
-     * Check that Magento is not removed if confirmation is denied
+     * Check that Contao is not removed if confirmation is denied
      */
     public function testUninstallDoesNotUninstallIfConfirmationDenied()
     {
@@ -72,13 +72,13 @@ class UninstallCommandTest extends TestCase
         $commandTester->execute(array('command' => $command->getName()));
         $this->assertEquals("Really uninstall ? [n]: ", $commandTester->getDisplay());
 
-        //check magento still installed
-        $this->assertFileExists($this->getMagentoFile());
+        //check contao still installed
+        $this->assertFileExists($this->getContaoFile());
         */
     }
 
     /**
-     * Check that Magento is removed if confirmation is supplied
+     * Check that Contao is removed if confirmation is supplied
      */
     public function testUninstallSucceedsWithConfirmation()
     {
@@ -99,7 +99,7 @@ class UninstallCommandTest extends TestCase
         $this->assertContains("Dropped database", $commandTester->getDisplay());
         $this->assertContains("Remove directory " . $this->getMageRoot(), $commandTester->getDisplay());
         $this->assertContains("Done", $commandTester->getDisplay());
-        $this->assertFileNotExists($this->getMagentoFile());
+        $this->assertFileNotExists($this->getContaoFile());
         */
     }
 

@@ -13,7 +13,7 @@
 namespace Composer\Test\Command;
 
 use Composer\Command\InitCommand;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class InitCommandTest extends TestCase

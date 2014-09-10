@@ -1,0 +1,82 @@
+<?php
+
+namespace IMI\Contao\Command\Customer;
+
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use IMI\Util\Console\Helper\Table\Renderer\RendererFactory;
+
+class ListCommand extends AbstractCustomerCommand
+{
+    protected function configure()
+    {
+        $this
+            ->setName('customer:list')
+            ->addArgument('search', InputArgument::OPTIONAL, 'Search query')
+            ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
+            )
+            ->setDescription('Lists customers')
+        ;
+
+        $help = <<<HELP
+List customers. The output is limited to 1000 (can be changed by overriding config).
+If search parameter is given the customers are filtered (searchs in firstname, lastname and email).
+HELP;
+        $this->setHelp($help);
+
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return int|void
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->detectContao($output, true);
+        if ($this->initContao()) {
+
+            $config = $this->getCommandConfig();
+
+            $collection = $this->getCustomerCollection();
+            $collection->addAttributeToSelect(array('entity_id', 'email', 'firstname', 'lastname', 'website_id'));
+
+            if ($input->getArgument('search')) {
+                $collection->addAttributeToFilter(
+                    array(
+                        array('attribute' => 'email', 'like' => '%' . $input->getArgument('search') . '%'),
+                        array('attribute' => 'firstname', 'like' => '%' . $input->getArgument('search') . '%'),
+                        array('attribute' => 'lastname', 'like' => '%' . $input->getArgument('search') . '%'),
+                    )
+                );
+            }
+
+            $collection->setPageSize($config['limit']);
+
+            $table = array();
+            foreach ($collection as $customer) {
+                $table[] = array(
+                    $customer->getId(),
+                    $customer->getEmail(),
+                    $customer->getFirstname(),
+                    $customer->getLastname(),
+                    $this->_getWebsiteCodeById($customer->getwebsiteId()),
+                );
+            }
+
+            if (count($table) > 0) {
+                $this->getHelper('table')
+                    ->setHeaders(array('id', 'email', 'firstname', 'lastname', 'website'))
+                    ->renderByFormat($output, $table, $input->getOption('format'));
+            } else {
+                $output->writeln('<comment>No customers found</comment>');
+            }
+        }
+    }
+}

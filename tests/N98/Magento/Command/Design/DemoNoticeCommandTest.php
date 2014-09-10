@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Design;
+namespace IMI\Contao\Command\Design;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class DemoNoticeCommandTest extends TestCase
 {

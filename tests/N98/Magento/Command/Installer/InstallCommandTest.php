@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Installer;
+namespace IMI\Contao\Command\Installer;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class InstallCommandTest extends TestCase
 {
@@ -32,7 +32,7 @@ class InstallCommandTest extends TestCase
         $command = $this->getApplication()->find('install');
         $command->setCliArguments(
             array(
-                '--dbName=magento',
+                '--dbName=contao',
                 '--dbHost=hostWhichDoesntExist',
                 '--dbUser=user',
                 '--dbPass=pa$$w0rd',
@@ -52,7 +52,7 @@ class InstallCommandTest extends TestCase
                     '--dbHost'                  => 'hostWhichDoesntExist',
                     '--dbUser'                  => 'user',
                     '--dbPass'                  => 'pa$$w0rd',
-                    '--dbName'                  => 'magento',
+                    '--dbName'                  => 'contao',
                 )
             );
         } catch (\InvalidArgumentException $e) {

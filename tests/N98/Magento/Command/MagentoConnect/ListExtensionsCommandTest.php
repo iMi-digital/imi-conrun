@@ -1,15 +1,15 @@
 <?php
 
-namespace N98\Magento\Command\MagentoConnect;
+namespace IMI\Contao\Command\ContaoConnect;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ListExtensionsCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $this->getApplication()->initMagento();
+        $this->getApplication()->initContao();
         if (version_compare(\Mage::getVersion(), '1.4.2.0', '<=')) {
             $this->markTestSkipped('Skip Test - mage cli script does not exist.');
         }

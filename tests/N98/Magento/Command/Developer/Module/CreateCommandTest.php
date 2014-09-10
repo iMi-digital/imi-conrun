@@ -1,10 +1,10 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Module;
+namespace IMI\Contao\Command\Developer\Module;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
-use N98\Util\Filesystem;
+use IMI\Contao\Command\PHPUnit\TestCase;
+use IMI\Util\Filesystem;
 
 class CreateCommandTest extends TestCase
 {
@@ -17,9 +17,9 @@ class CreateCommandTest extends TestCase
         $root = getcwd();
 
         // delete old module
-        if (is_dir($root . '/N98Magerun_UnitTest')) {
+        if (is_dir($root . '/IMIContrun_UnitTest')) {
             $filesystem = new Filesystem();
-            $filesystem->recursiveRemoveDirectory($root . '/N98Magerun_UnitTest');
+            $filesystem->recursiveRemoveDirectory($root . '/IMIContrun_UnitTest');
             clearstatcache();
         }
 
@@ -34,26 +34,26 @@ class CreateCommandTest extends TestCase
                 '--modman'        => true,
                 '--description'   => 'Unit Test Description',
                 '--author-name'   => 'Unit Test',
-                '--author-email'  => 'n98-magerun@example.com',
-                'vendorNamespace' => 'N98Magerun',
+                '--author-email'  => 'imi-conrun@example.com',
+                'vendorNamespace' => 'IMIContrun',
                 'moduleName'      => 'UnitTest'
             )
         );
 
-        $this->assertFileExists($root . '/N98Magerun_UnitTest/composer.json');
-        $this->assertFileExists($root . '/N98Magerun_UnitTest/readme.md');
-        $moduleBaseFolder = $root . '/N98Magerun_UnitTest/src/app/code/local/N98Magerun/UnitTest/';
+        $this->assertFileExists($root . '/IMIContrun_UnitTest/composer.json');
+        $this->assertFileExists($root . '/IMIContrun_UnitTest/readme.md');
+        $moduleBaseFolder = $root . '/IMIContrun_UnitTest/src/app/code/local/IMIContrun/UnitTest/';
         $this->assertFileExists($moduleBaseFolder . 'etc/config.xml');
         $this->assertFileExists($moduleBaseFolder . 'Block');
         $this->assertFileExists($moduleBaseFolder . 'Model');
         $this->assertFileExists($moduleBaseFolder . 'Helper');
-        $this->assertFileExists($moduleBaseFolder . 'data/n98magerun_unittest_setup');
-        $this->assertFileExists($moduleBaseFolder . 'sql/n98magerun_unittest_setup');
+        $this->assertFileExists($moduleBaseFolder . 'data/imiconrun_unittest_setup');
+        $this->assertFileExists($moduleBaseFolder . 'sql/imiconrun_unittest_setup');
 
         // delete old module
-        if (is_dir($root . '/N98Magerun_UnitTest')) {
+        if (is_dir($root . '/IMIContrun_UnitTest')) {
             $filesystem = new Filesystem();
-            $filesystem->recursiveRemoveDirectory($root . '/N98Magerun_UnitTest');
+            $filesystem->recursiveRemoveDirectory($root . '/IMIContrun_UnitTest');
             clearstatcache();
         }
     }

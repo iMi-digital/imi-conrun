@@ -1,23 +1,23 @@
 <?php
 
-namespace N98\Util\Console\Helper;
+namespace IMI\Util\Console\Helper;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 use org\bovigo\vfs\vfsStream;
 
 
-class MagentoHelperTest extends TestCase
+class ContaoHelperTest extends TestCase
 {
     /**
-     * @return MagentoHelper
+     * @return ContaoHelper
      */
     protected function getHelper()
     {
         $inputMock = $this->getMock('Symfony\Component\Console\Input\InputInterface');
         $outputMock = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
 
-        return new MagentoHelper($inputMock, $outputMock);
+        return new ContaoHelper($inputMock, $outputMock);
     }
 
     /**
@@ -25,13 +25,13 @@ class MagentoHelperTest extends TestCase
      */
     public function testHelperInstance()
     {
-        $this->assertInstanceOf('\N98\Util\Console\Helper\MagentoHelper', $this->getHelper());
+        $this->assertInstanceOf('\IMI\Util\Console\Helper\ContaoHelper', $this->getHelper());
     }
 
     /**
      * @test
      */
-    public function detectMagentoInStandardFolder()
+    public function detectContaoInStandardFolder()
     {
         vfsStream::setup('root');
         vfsStream::create(
@@ -46,13 +46,13 @@ class MagentoHelperTest extends TestCase
         $helper->detect(vfsStream::url('root'), array());
 
         $this->assertEquals(vfsStream::url('root'), $helper->getRootFolder());
-        $this->assertEquals(\N98\Magento\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
+        $this->assertEquals(\IMI\Contao\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
     }
 
     /**
      * @test
      */
-    public function detectMagentoInHtdocsSubfolder()
+    public function detectContaoInHtdocsSubfolder()
     {
         vfsStream::setup('root');
         vfsStream::create(
@@ -78,13 +78,13 @@ class MagentoHelperTest extends TestCase
         );
 
         $this->assertEquals(vfsStream::url('root/htdocs'), $helper->getRootFolder());
-        $this->assertEquals(\N98\Magento\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
+        $this->assertEquals(\IMI\Contao\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
     }
 
     /**
      * @test
      */
-    public function detectMagentoFailed()
+    public function detectContaoFailed()
     {
         vfsStream::setup('root');
         vfsStream::create(
@@ -106,14 +106,14 @@ class MagentoHelperTest extends TestCase
     /**
      * @test
      */
-    public function detectMagentoInModmanInfrastructure()
+    public function detectContaoInModmanInfrastructure()
     {
         vfsStream::setup('root');
         vfsStream::create(
             array(
-                '.basedir' => 'root/htdocs/magento_root',
+                '.basedir' => 'root/htdocs/contao_root',
                 'htdocs' => array(
-                    'magento_root' => array(
+                    'contao_root' => array(
                         'app' => array(
                             'Mage.php' => ''
                         )
@@ -130,15 +130,15 @@ class MagentoHelperTest extends TestCase
         );
 
         // Verify if this could be checked with more elegance
-        $this->assertEquals(vfsStream::url('root/../root/htdocs/magento_root'), $helper->getRootFolder());
+        $this->assertEquals(vfsStream::url('root/../root/htdocs/contao_root'), $helper->getRootFolder());
 
-        $this->assertEquals(\N98\Magento\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
+        $this->assertEquals(\IMI\Contao\Application::MAGENTO_MAJOR_VERSION_1, $helper->getMajorVersion());
     }
 
     /**
      * @test
      */
-    public function detectMagento2InHtdocsSubfolder()
+    public function detectContao2InHtdocsSubfolder()
     {
         vfsStream::setup('root');
         vfsStream::create(
@@ -165,6 +165,6 @@ class MagentoHelperTest extends TestCase
         );
 
         $this->assertEquals(vfsStream::url('root/htdocs'), $helper->getRootFolder());
-        $this->assertEquals(\N98\Magento\Application::MAGENTO_MAJOR_VERSION_2, $helper->getMajorVersion());
+        $this->assertEquals(\IMI\Contao\Application::MAGENTO_MAJOR_VERSION_2, $helper->getMajorVersion());
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Config;
+namespace IMI\Contao\Command\Config;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class DeleteCommandTest extends TestCase
 {
@@ -21,20 +21,20 @@ class DeleteCommandTest extends TestCase
         $commandTester->execute(
             array(
                 'command' => $setCommand->getName(),
-                'path'    => 'n98_magerun/foo/bar',
+                'path'    => 'imi_conrun/foo/bar',
                 'value'   => '1234',
             )
         );
-        $this->assertContains('n98_magerun/foo/bar => 1234', $commandTester->getDisplay());
+        $this->assertContains('imi_conrun/foo/bar => 1234', $commandTester->getDisplay());
 
         $commandTester = new CommandTester($deleteCommand);
         $commandTester->execute(
             array(
                 'command' => $deleteCommand->getName(),
-                'path'    => 'n98_magerun/foo/bar',
+                'path'    => 'imi_conrun/foo/bar',
             )
         );
-        $this->assertContains('| n98_magerun/foo/bar | default | 0  |', $commandTester->getDisplay());
+        $this->assertContains('| imi_conrun/foo/bar | default | 0  |', $commandTester->getDisplay());
 
 
         /**
@@ -47,7 +47,7 @@ class DeleteCommandTest extends TestCase
             $commandTester->execute(
                 array(
                      'command'    => $setCommand->getName(),
-                     'path'       => 'n98_magerun/foo/bar',
+                     'path'       => 'imi_conrun/foo/bar',
                      '--scope'    => 'stores',
                      '--scope-id'  => $store->getId(),
                      'value'      => 'store-' . $store->getId(),
@@ -59,13 +59,13 @@ class DeleteCommandTest extends TestCase
         $commandTester->execute(
             array(
                  'command' => $deleteCommand->getName(),
-                 'path'    => 'n98_magerun/foo/bar',
+                 'path'    => 'imi_conrun/foo/bar',
                  '--all'   => true,
             )
         );
 
         foreach (\Mage::app()->getStores() as $store) {
-            $this->assertContains('| n98_magerun/foo/bar | stores   | ' . $store->getId() . '  |', $commandTester->getDisplay());
+            $this->assertContains('| imi_conrun/foo/bar | stores   | ' . $store->getId() . '  |', $commandTester->getDisplay());
         }
 
     }

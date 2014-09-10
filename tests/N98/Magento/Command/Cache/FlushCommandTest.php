@@ -1,17 +1,17 @@
 <?php
 
-namespace N98\Magento\Command\Cache;
+namespace IMI\Contao\Command\Cache;
 
-use N98\Magento\Application;
+use IMI\Contao\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class FlushCommandTest extends TestCase
 {
     public function testExecute()
     {
         $application = $this->getApplication();
-        if ($application->getMagentoMajorVersion() == Application::MAGENTO_MAJOR_VERSION_1) {
+        if ($application->getContaoMajorVersion() == Application::MAGENTO_MAJOR_VERSION_1) {
             $application = $this->getApplication();
             $application->add(new FlushCommand());
             $command = $this->getApplication()->find('cache:flush');

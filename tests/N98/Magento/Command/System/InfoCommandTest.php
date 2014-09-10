@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\System;
+namespace IMI\Contao\Command\System;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class InfoCommandTest extends TestCase
 {
@@ -16,7 +16,7 @@ class InfoCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(array('command' => $command->getName()));
 
-        $this->assertRegExp('/Magento System Information/', $commandTester->getDisplay());
+        $this->assertRegExp('/Contao System Information/', $commandTester->getDisplay());
         $this->assertRegExp('/Install Date/', $commandTester->getDisplay());
         $this->assertRegExp('/Crypt Key/', $commandTester->getDisplay());
     }

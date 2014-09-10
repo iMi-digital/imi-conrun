@@ -2,11 +2,11 @@
 
 namespace TestModule;
 
-use N98\Magento\Command\AbstractMagentoCommand;
+use IMI\Contao\Command\AbstractContaoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FooCommand extends AbstractMagentoCommand
+class FooCommand extends AbstractContaoCommand
 {
     protected function configure()
     {
@@ -23,8 +23,8 @@ class FooCommand extends AbstractMagentoCommand
     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->detectMagento($output);
-        if ($this->initMagento()) {
+        $this->detectContao($output);
+        if ($this->initContao()) {
             
         }
     }

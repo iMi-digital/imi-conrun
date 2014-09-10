@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Indexer;
+namespace IMI\Contao\Command\Indexer;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ReindexAllCommandTest extends TestCase
 {
@@ -13,7 +13,7 @@ class ReindexAllCommandTest extends TestCase
         $application->add(new ReindexAllCommand());
         $command = $this->getApplication()->find('index:reindex:all');
 
-        $application->initMagento();
+        $application->initContao();
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(

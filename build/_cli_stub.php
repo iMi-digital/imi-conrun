@@ -1,9 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-Phar::mapPhar('n98-magerun.phar');
+Phar::mapPhar('imi-conrun.phar');
 
-$application = require_once 'phar://n98-magerun.phar/src/bootstrap.php';
+$application = require_once 'phar://imi-conrun.phar/src/bootstrap.php';
 $application->setPharMode(true);
 $application->run();
 

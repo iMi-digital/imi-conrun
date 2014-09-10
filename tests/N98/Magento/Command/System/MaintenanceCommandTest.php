@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\System;
+namespace IMI\Contao\Command\System;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class MaintenanceCommandTest extends TestCase
 {
@@ -21,7 +21,7 @@ class MaintenanceCommandTest extends TestCase
             )
         );
         $this->assertRegExp('/Maintenance mode on/', $commandTester->getDisplay());
-        $this->assertFileExists($this->getApplication()->getMagentoRootFolder() . '/maintenance.flag');
+        $this->assertFileExists($this->getApplication()->getContaoRootFolder() . '/maintenance.flag');
 
         $commandTester->execute(
             array(
@@ -30,6 +30,6 @@ class MaintenanceCommandTest extends TestCase
             )
         );
         $this->assertRegExp('/Maintenance mode off/', $commandTester->getDisplay());
-        $this->assertFileNotExists($this->getApplication()->getMagentoRootFolder() . '/maintenance.flag');
+        $this->assertFileNotExists($this->getApplication()->getContaoRootFolder() . '/maintenance.flag');
     }
 }

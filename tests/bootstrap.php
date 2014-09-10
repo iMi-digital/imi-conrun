@@ -5,7 +5,7 @@ $loader = require __DIR__ . '/../vendor/autoload.php';
 /* @var $loader \Composer\Autoload\ClassLoader */
 $loader->setUseIncludePath(true);
 
-$base = getenv('N98_MAGERUN_TEST_MAGENTO_ROOT');
+$base = getenv('IMI_MAGERUN_TEST_MAGENTO_ROOT');
 $paths = array(
     $base . '/app/code/local',
     $base . '/app/code/community',

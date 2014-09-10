@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Ide\PhpStorm;
+namespace IMI\Contao\Command\Developer\Ide\PhpStorm;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class MetaCommandTest extends TestCase
 {
@@ -20,12 +20,12 @@ class MetaCommandTest extends TestCase
             )
         );
 
-        $generatedFile = $this->getApplication()->getMagentoRootFolder() . '/.phpstorm.meta.php';
+        $generatedFile = $this->getApplication()->getContaoRootFolder() . '/.phpstorm.meta.php';
         $this->assertFileExists($generatedFile);
         $fileContent = file_get_contents($generatedFile);
         $this->assertContains('\'catalog\' instanceof \Mage_Catalog_Helper_Data', $fileContent);
         $this->assertContains('\'core/config\' instanceof \Mage_Core_Model_Config', $fileContent);
-        if (class_exists('\Mage_Core_Model_Resource_Config')) { // since magento 1.7
+        if (class_exists('\Mage_Core_Model_Resource_Config')) { // since contao 1.7
             $this->assertContains('\'core/config\' instanceof \Mage_Core_Model_Resource_Config', $fileContent);
         }
         $this->assertContains('\'wishlist\' instanceof \Mage_Wishlist_Helper_Data', $fileContent);

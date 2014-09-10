@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\LocalConfig;
+namespace IMI\Contao\Command\LocalConfig;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class GenerateCommandTest extends TestCase
 {
@@ -11,7 +11,7 @@ class GenerateCommandTest extends TestCase
     {
         $testConfigFile = __DIR__ . '/_local.xml';
         $application = $this->getApplication();
-        $commandMock = $this->getMock('\N98\Magento\Command\LocalConfig\GenerateCommand', array('_getLocalConfigFilename'));
+        $commandMock = $this->getMock('\IMI\Contao\Command\LocalConfig\GenerateCommand', array('_getLocalConfigFilename'));
         $commandMock
             ->expects($this->any())
             ->method('_getLocalConfigFilename')

@@ -1,14 +1,14 @@
 <?php
 
-namespace N98\Magento\Command\Database;
+namespace IMI\Contao\Command\Database;
 
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 /**
- * @see \N98\Magento\Command\Database\DumpCommand
+ * @see \IMI\Contao\Command\Database\DumpCommand
  */
 class DumpCommandTest extends TestCase
 {
@@ -163,7 +163,7 @@ class DumpCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $this->getApplication()->initMagento();
+        $this->getApplication()->initContao();
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(

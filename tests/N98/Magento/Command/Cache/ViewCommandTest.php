@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Cache;
+namespace IMI\Contao\Command\Cache;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ViewCommandTest extends TestCase
 {
@@ -13,17 +13,17 @@ class ViewCommandTest extends TestCase
         $application->add(new ListCommand());
         $command = $this->getApplication()->find('cache:view');
 
-        \Mage::app()->getCache()->save('TEST n98-magerun', 'n98-magerun-unittest');
+        \Mage::app()->getCache()->save('TEST imi-conrun', 'imi-conrun-unittest');
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
                 'command' => $command->getName(),
-                'id'      => 'n98-magerun-unittest'
+                'id'      => 'imi-conrun-unittest'
             )
         );
 
-        $this->assertRegExp('/TEST n98-magerun/', $commandTester->getDisplay());
+        $this->assertRegExp('/TEST imi-conrun/', $commandTester->getDisplay());
     }
 
     public function testExecuteUnserialize()
@@ -38,13 +38,13 @@ class ViewCommandTest extends TestCase
             3,
             'foo' => array('bar')
         );
-        \Mage::app()->getCache()->save(serialize($cacheData), 'n98-magerun-unittest');
+        \Mage::app()->getCache()->save(serialize($cacheData), 'imi-conrun-unittest');
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             array(
                 'command'       => $command->getName(),
-                'id'            => 'n98-magerun-unittest',
+                'id'            => 'imi-conrun-unittest',
                 '--unserialize' => true,
             )
         );

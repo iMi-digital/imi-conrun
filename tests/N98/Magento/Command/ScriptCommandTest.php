@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command;
+namespace IMI\Contao\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ScriptCommandTest extends TestCase
 {
@@ -24,16 +24,16 @@ class ScriptCommandTest extends TestCase
 
         // Check pre defined vars
         $edition = is_callable(array('\Mage', 'getEdition')) ? \Mage::getEdition() : 'Community';
-        $this->assertContains('magento.edition: ' . $edition, $commandTester->getDisplay());
+        $this->assertContains('contao.edition: ' . $edition, $commandTester->getDisplay());
 
-        $this->assertContains('magento.root: ' . $this->getApplication()->getMagentoRootFolder(), $commandTester->getDisplay());
-        $this->assertContains('magento.version: ' . \Mage::getVersion(), $commandTester->getDisplay());
-        $this->assertContains('magerun.version: ' . $this->getApplication()->getVersion(), $commandTester->getDisplay());
+        $this->assertContains('contao.root: ' . $this->getApplication()->getContaoRootFolder(), $commandTester->getDisplay());
+        $this->assertContains('contao.version: ' . \Mage::getVersion(), $commandTester->getDisplay());
+        $this->assertContains('conrun.version: ' . $this->getApplication()->getVersion(), $commandTester->getDisplay());
 
         $this->assertContains('code', $commandTester->getDisplay());
         $this->assertContains('foo.sql', $commandTester->getDisplay());
         $this->assertContains('BAR: foo.sql.gz', $commandTester->getDisplay());
-        $this->assertContains('Magento Websites', $commandTester->getDisplay());
+        $this->assertContains('Contao Websites', $commandTester->getDisplay());
         $this->assertContains('web/secure/base_url', $commandTester->getDisplay());
         $this->assertContains('web/seo/use_rewrites => 1', $commandTester->getDisplay());
     }

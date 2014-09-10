@@ -1,9 +1,9 @@
 <?php
 
-namespace N98\Magento\Command\Developer\Translate;
+namespace IMI\Contao\Command\Developer\Translate;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class InlineShopCommandTest extends TestCase
 {

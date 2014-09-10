@@ -1,16 +1,16 @@
 <?php
 
-namespace N98\Magento\Command\System\Setup;
+namespace IMI\Contao\Command\System\Setup;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 
 class ChangeVersionCommandTest extends TestCase
 {
 
     public function testChangeVersion()
     {
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\ChangeVersionCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\ChangeVersionCommand')
             ->setMethods(array('_getResourceSingleton'))
             ->getMock();
         
@@ -53,7 +53,7 @@ class ChangeVersionCommandTest extends TestCase
 
     public function testUpdateBySetupName()
     {
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\ChangeVersionCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\ChangeVersionCommand')
             ->setMethods(array('_getResourceSingleton'))
             ->getMock();
 
@@ -135,7 +135,7 @@ class ChangeVersionCommandTest extends TestCase
     public function testCommandReturnsEarlyIfNoSetupResourcesForModule()
     {
 
-        $command = $this->getMockBuilder('\N98\Magento\Command\System\Setup\ChangeVersionCommand')
+        $command = $this->getMockBuilder('\IMI\Contao\Command\System\Setup\ChangeVersionCommand')
             ->setMethods(array('getModuleSetupResources'))
             ->getMock();
 

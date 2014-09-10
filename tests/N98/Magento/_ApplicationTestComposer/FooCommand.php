@@ -4,9 +4,9 @@ namespace Acme;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use N98\Magento\Command\AbstractMagentoCommand;
+use IMI\Contao\Command\AbstractContaoCommand;
 
-class FooCommand extends AbstractMagentoCommand
+class FooCommand extends AbstractContaoCommand
 {
     protected function configure()
     {

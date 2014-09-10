@@ -1,13 +1,13 @@
 {
-    "name": "n98/magerun",
-    "description": "Tools for managing Magento projects and installations",
+    "name": "imi/conrun",
+    "description": "Tools for managing Contao projects and installations",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/netz98/n98-magerun/issues"
+        "issues": "https://github.com/netz98/imi-conrun/issues"
     },
     "minimum-stability": "dev",
-    "homepage": "http://netz98.github.com/n98-magerun/",
-    "keywords": ["magento", "installer", "cli", "magerun"],
+    "homepage": "http://netz98.github.com/imi-conrun/",
+    "keywords": ["contao", "installer", "cli", "conrun"],
     "require": {
         "php": ">=5.3.3",
         "symfony/console": "2.5.2",
@@ -16,7 +16,7 @@
         "symfony/yaml": "2.5.2",
         "symfony/process": "2.5.2",
         "symfony/validator": "2.5.2",
-        "n98/junit-xml": "1.0.0",
+        "imi/junit-xml": "1.0.0",
         "fzaninotto/faker": "1.4.0",
         "composer/composer": "1.0.*@dev",
         "twig/twig": "1.*"
@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-0": {
-            "N98": "src",
+            "IMI": "src",
             "Composer": "src"
         }
     },
@@ -41,5 +41,5 @@
             "email": "a.menk@netz98.de"
         }
     ],
-    "bin": ["bin/n98-magerun"]
+    "bin": ["bin/imi-conrun"]
 }

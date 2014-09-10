@@ -1,8 +1,8 @@
 <?php
 
-namespace N98\Magento\Command\Admin\User;
+namespace IMI\Contao\Command\Admin\User;
 
-use N98\Magento\Command\PHPUnit\TestCase;
+use IMI\Contao\Command\PHPUnit\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -15,7 +15,7 @@ class DeleteUserCommandTest extends TestCase
 
     public function setUp()
     {
-        $this->command = $this->getMockBuilder('\N98\Magento\Command\Admin\User\DeleteUserCommand')
+        $this->command = $this->getMockBuilder('\IMI\Contao\Command\Admin\User\DeleteUserCommand')
             ->setMethods(array('getUserModel'))
             ->getMock();
 
