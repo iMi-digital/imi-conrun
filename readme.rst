@@ -1,9 +1,10 @@
-========================
-netz98 conrun CLI tools
-========================
+============================
+iMi digital conrun CLI tools
+============================
 
 The imi conrun cli tools provides some handy tools to work with Contao from command line.
 
+It is highly based on n98-magerun.
 
 Build Status
 ------------
