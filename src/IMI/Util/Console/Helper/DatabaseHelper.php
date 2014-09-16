@@ -48,35 +48,15 @@ class DatabaseHelper extends AbstractHelper
             }
             $application->detectContao();
 
-            $configFile = $application->getContaoRootFolder() . '/app/etc/local.xml';
+            $application->initContao();
 
-            if (!is_readable($configFile)) {
-                throw new \Exception('app/etc/local.xml is not readable');
-            }
-            $config = \simplexml_load_string(\file_get_contents($configFile));
-            if (!$config->global->resources->default_setup->connection) {
-                $output->writeln('<error>DB settings was not found in local.xml file</error>');
-                return;
-            }
-
-            if (!isset($config->global->resources->default_setup->connection)) {
-                throw new \Exception('Cannot find default_setup config in app/etc/local.xml');
-            }
-
-            $this->dbSettings = (array) $config->global->resources->default_setup->connection;
-            $this->dbSettings['prefix'] = (string) $config->global->resources->db->table_prefix;
-
-            if(strpos($this->dbSettings['host'], ':') !== false) {
-                list($this->dbSettings['host'], $this->dbSettings['port']) = explode(':', $this->dbSettings['host']);
-            }
-
-            if (isset($this->dbSettings['comment'])) {
-                unset($this->dbSettings['comment']);
-            }
-
-            if (isset($this->dbSettings['unix_socket'])) {
-                $this->isSocketConnect = true;
-            }
+            $this->dbSettings = array(
+                'host' => $GLOBALS['TL_CONFIG']['dbHost'],
+                'dbname' => $GLOBALS['TL_CONFIG']['dbDatabase'],
+                'username' => $GLOBALS['TL_CONFIG']['dbUser'],
+                'password' => $GLOBALS['TL_CONFIG']['dbPass'],
+                'port' => $GLOBALS['TL_CONFIG']['dbPort']
+            );
         }
     }
 

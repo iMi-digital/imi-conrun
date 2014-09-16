@@ -697,10 +697,10 @@ class Application extends BaseApplication
     {
         $initSettings = $this->config['init'];
 
-        if (!class_exists('Mage')) {
+        if (!class_exists('System')) {
             $autoloaders = spl_autoload_functions();
 
-            define('TL_MODE', 'BE');
+            define('TL_MODE', 'FE');
 
             require_once $this->getContaoRootFolder() . '/system/initialize.php';
             // Restore autoloaders that might be removed by extensions that overwrite Varien/Autoload
