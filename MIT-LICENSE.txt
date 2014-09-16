@@ -1,3 +1,9 @@
+Copyright (c) 2014 iMi digital GmbH
+
+http://www.imi-digital.de
+
+Based on n98-magerun
+
 Copyright (c) 2012 netz98 new media GmbH
 
 http://www.netz98.de
