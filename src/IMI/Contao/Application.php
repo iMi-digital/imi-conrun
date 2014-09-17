@@ -39,7 +39,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '0.0.1';
+    const APP_VERSION = '1.0.0';
 
     /**
      * @var string
@@ -406,7 +406,8 @@ class Application extends BaseApplication
 
     public function getLongVersion()
     {
-        return parent::getLongVersion() . ' by <info>iMi digital GmbH</info>';
+        return parent::getLongVersion() . ' by <info>iMi digital GmbH</info>' . PHP_EOL .
+            'portions by <info>netz98 new media GmbH</info>';
     }
 
     /**

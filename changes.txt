@@ -3,6 +3,12 @@ RECENT CHANGES
 **************
 
 =====
+1.0.0
+=====
+
+* Removed not yet ported commands
+
+=====
 0.0.1
 =====
 

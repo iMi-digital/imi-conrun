@@ -41,31 +41,6 @@ event:
 
 commands:
   customCommands:
-    - IMI\Contao\Command\Admin\DisableNotificationsCommand
-    - IMI\Contao\Command\Admin\User\ChangePasswordCommand
-    - IMI\Contao\Command\Admin\User\CreateUserCommand
-    - IMI\Contao\Command\Admin\User\ListCommand
-    - IMI\Contao\Command\Admin\User\DeleteUserCommand
-    - IMI\Contao\Command\Cache\CleanCommand
-    - IMI\Contao\Command\Cache\DisableCommand
-    - IMI\Contao\Command\Cache\EnableCommand
-    - IMI\Contao\Command\Cache\FlushCommand
-    - IMI\Contao\Command\Cache\ListCommand
-    - IMI\Contao\Command\Cache\ReportCommand
-    - IMI\Contao\Command\Cache\ViewCommand
-    - IMI\Contao\Command\Cms\Banner\ToggleCommand
-    - IMI\Contao\Command\Cms\Page\PublishCommand
-    - IMI\Contao\Command\Config\DeleteCommand
-    - IMI\Contao\Command\Config\DumpCommand
-    - IMI\Contao\Command\Config\GetCommand
-    - IMI\Contao\Command\Config\SetCommand
-    - IMI\Contao\Command\Config\SearchCommand
-    - IMI\Contao\Command\Customer\ChangePasswordCommand
-    - IMI\Contao\Command\Customer\CreateCommand
-    - IMI\Contao\Command\Customer\CreateDummyCommand
-    - IMI\Contao\Command\Customer\InfoCommand
-    - IMI\Contao\Command\Customer\ListCommand
-    - IMI\Contao\Command\Customer\DeleteCommand
     - IMI\Contao\Command\Database\ConsoleCommand
     - IMI\Contao\Command\Database\CreateCommand
     - IMI\Contao\Command\Database\DropCommand
@@ -74,76 +49,7 @@ commands:
     - IMI\Contao\Command\Database\InfoCommand
     - IMI\Contao\Command\Database\QueryCommand
     - IMI\Contao\Command\Database\Maintain\CheckTablesCommand
-    - IMI\Contao\Command\Design\DemoNoticeCommand
-    - IMI\Contao\Command\Developer\Code\Model\MethodCommand
-    - IMI\Contao\Command\Developer\Ide\PhpStorm\MetaCommand
-    - IMI\Contao\Command\Developer\Setup\Script\AttributeCommand
-    - IMI\Contao\Command\Developer\ConsoleCommand
-    - IMI\Contao\Command\Developer\Log\DbCommand
-    - IMI\Contao\Command\Developer\Log\LogCommand
-    - IMI\Contao\Command\Developer\Log\SizeCommand
-    - IMI\Contao\Command\Developer\Module\CreateCommand
-    - IMI\Contao\Command\Developer\Module\ListCommand
-    - IMI\Contao\Command\Developer\Module\Observer\ListCommand
-    - IMI\Contao\Command\Developer\Module\Rewrite\ConflictsCommand
-    - IMI\Contao\Command\Developer\Module\Rewrite\ListCommand
-    - IMI\Contao\Command\Developer\Module\Dependencies\OnCommand
-    - IMI\Contao\Command\Developer\Module\Dependencies\FromCommand
-    - IMI\Contao\Command\Developer\ProfilerCommand
-    - IMI\Contao\Command\Developer\Report\CountCommand
-    - IMI\Contao\Command\Developer\ClassLookupCommand
-    - IMI\Contao\Command\Developer\SymlinksCommand
-    - IMI\Contao\Command\Developer\TemplateHintsBlocksCommand
-    - IMI\Contao\Command\Developer\TemplateHintsCommand
-    - IMI\Contao\Command\Developer\Theme\DuplicatesCommand
-    - IMI\Contao\Command\Developer\Theme\ListCommand
-    - IMI\Contao\Command\Developer\Translate\InlineAdminCommand
-    - IMI\Contao\Command\Developer\Translate\InlineShopCommand
-    - IMI\Contao\Command\Developer\Translate\SetCommand
-    - IMI\Contao\Command\Developer\Translate\ExportCommand
-    - IMI\Contao\Command\Eav\Attribute\ListCommand
-    - IMI\Contao\Command\Eav\Attribute\RemoveCommand
-    - IMI\Contao\Command\Eav\Attribute\ViewCommand
-    - IMI\Contao\Command\Indexer\ListCommand
-    - IMI\Contao\Command\Indexer\ReindexAllCommand
-    - IMI\Contao\Command\Indexer\ReindexCommand
-    - IMI\Contao\Command\Installer\InstallCommand
-    - IMI\Contao\Command\Installer\UninstallCommand
-    - IMI\Contao\Command\LocalConfig\GenerateCommand
-    - IMI\Contao\Command\ContaoConnect\DownloadExtensionCommand
-    - IMI\Contao\Command\ContaoConnect\InstallExtensionCommand
-    - IMI\Contao\Command\ContaoConnect\ListExtensionsCommand
-    - IMI\Contao\Command\ContaoConnect\UpgradeExtensionCommand
-    - IMI\Contao\Command\ContaoConnect\ValidateExtensionCommand
-    - IMI\Contao\Command\Media\DumpCommand
-    - IMI\Contao\Command\OpenBrowserCommand
-    - IMI\Contao\Command\ScriptCommand
-    - IMI\Contao\Command\Script\Repository\ListCommand
-    - IMI\Contao\Command\Script\Repository\RunCommand
-    - IMI\Contao\Command\SelfUpdateCommand
-    - IMI\Contao\Command\ShellCommand
-    - IMI\Contao\Command\System\CheckCommand
-    - IMI\Contao\Command\System\Cron\HistoryCommand
-    - IMI\Contao\Command\System\Cron\ListCommand
-    - IMI\Contao\Command\System\Cron\RunCommand
     - IMI\Contao\Command\System\InfoCommand
-    - IMI\Contao\Command\System\MaintenanceCommand
-    - IMI\Contao\Command\System\Setup\CompareVersionsCommand
-    - IMI\Contao\Command\System\Setup\ChangeVersionCommand
-    - IMI\Contao\Command\System\Setup\RemoveCommand
-    - IMI\Contao\Command\System\Setup\RunCommand
-    - IMI\Contao\Command\System\Setup\IncrementalCommand
-    - IMI\Contao\Command\System\Store\Config\BaseUrlListCommand
-    - IMI\Contao\Command\System\Store\ListCommand
-    - IMI\Contao\Command\System\Url\ListCommand
-    - IMI\Contao\Command\System\Website\ListCommand
-    - "composer:init": Composer\Command\InitCommand
-    - "composer:install": Composer\Command\InstallCommand
-    - "composer:require": Composer\Command\RequireCommand
-    - "composer:update": Composer\Command\UpdateCommand
-    - "composer:validate": Composer\Command\ValidateCommand
-    - "composer:search": Composer\Command\SearchCommand
-    - "composer:diagnose": Composer\Command\DiagnoseCommand
 
   aliases: []
 
@@ -290,47 +196,36 @@ commands:
     table-groups:
       - id: log
         description: Log tables
-        tables: log_url log_url_info log_visitor log_visitor_info log_visitor_online report_event report_compared_product_index report_viewed_*
+        tables: tl_log
 
-      - id: dataflowtemp
-        description: Temporary tables of the dataflow import/export tool
-        tables: dataflow_batch dataflow_batch_export dataflow_batch_import dataflow_import_data dataflow_session
+      - id: versions
+        description: Versioning
+        tables: tl_undo tl_verion
 
       - id: sessions
         description: Database session tables
-        tables: core_session
+        tables: tl_session
 
       - id: stripped
         description: Standard definition for a stripped dump (logs and dataflow)
-        tables: @stripped @log @dataflowtemp @sessions
+        tables: @stripped @log @sessions
 
-      - id: sales
-        description: Sales data (orders, invoices, creditmemos etc)
-        tables: sales_order_aggregated* sales_order_tax* sales_flat* sales_recurring_* sales_refunded_* sales_payment_* enterprise_sales_* enterprise_customer_sales_* sales_bestsellers_*
+      - id: newsletter
+        description: Newsletter Recepients
+        tables: tl_newsletter_recipients
 
       - id: customers
-        description: Customer data - Should not be used without @sales
-        tables: customer_address* customer_entity*
-
-      - id: trade
-        description: Current trade data (customers and orders). You usally do not want those in developer systems.
-        tables: @customers @sales
+        description: Member data
+        tables: tl_member_*
 
       - id: development
-        description: Removes logs and trade data so developers do not have to work with real customer data
-        tables: @trade @stripped @search
-
-      - id: ee_changelog
-        description: Changelog tables of new indexer since EE 1.13
-        tables: "*_cl"
+        description: Removes logs and customer data as well as search
+        tables: @newsletter @customers @stripped @search
 
       - id: search
         description: Search related tables
-        tables: "catalogsearch_*"
+        tables: "tl_search tl_search_index"
 
-      - id: idx
-        description: Tables with _idx suffix
-        tables: "*_idx"
 
   IMI\Contao\Command\Customer\ListCommand:
     limit: 1000
