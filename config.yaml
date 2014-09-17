@@ -50,6 +50,8 @@ commands:
     - IMI\Contao\Command\Database\QueryCommand
     - IMI\Contao\Command\Database\Maintain\CheckTablesCommand
     - IMI\Contao\Command\System\InfoCommand
+    - IMI\Contao\Command\SelfUpdateCommand
+
 
   aliases: []
 

@@ -62,11 +62,11 @@ EOT
 
         $loadUnstable = $input->getOption('unstable');
         if ($loadUnstable) {
-            $versionTxtUrl = 'https://raw.githubusercontent.com/netz98/imi-conrun/develop/version.txt';
-            $remoteFilename = 'https://raw.githubusercontent.com/netz98/imi-conrun/develop/imi-conrun.phar';
+            $versionTxtUrl = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/develop/version.txt';
+            $remoteFilename = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/develop/imi-conrun.phar';
         } else {
-            $versionTxtUrl = 'https://raw.githubusercontent.com/netz98/imi-conrun/master/version.txt';
-            $remoteFilename = 'https://raw.githubusercontent.com/netz98/imi-conrun/master/imi-conrun.phar';
+            $versionTxtUrl = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/version.txt';
+            $remoteFilename = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/imi-conrun.phar';
         }
 
         $latest = trim($rfs->getContents('raw.githubusercontent.com', $versionTxtUrl, false));
