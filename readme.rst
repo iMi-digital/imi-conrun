@@ -18,13 +18,13 @@ Download phar file
 
 .. code-block:: sh
 
-    wget https://raw.githubusercontent.com/imi-digital/imi-conrun/master/imi-conrun.phar
+    wget https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/imi-conrun.phar
 
 or if you have problems with SSL certificate:
 
 .. code-block:: sh
 
-   curl -o imi-conrun.phar https://raw.githubusercontent.com/imi-digital/imi-conrun/master/imi-conrun.phar
+   curl -o imi-conrun.phar https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/imi-conrun.phar
 
 You can make the .phar file executable.
 
