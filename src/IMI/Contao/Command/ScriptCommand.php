@@ -291,10 +291,9 @@ HELP;
 
     protected function initScriptVars()
     {
-        if (class_exists('\Mage')) {
+        if (class_exists('System')) {
             $this->scriptVars['${contao.root}'] = $this->getApplication()->getContaoRootFolder();
-            $this->scriptVars['${contao.version}'] = \Mage::getVersion();
-            $this->scriptVars['${contao.edition}'] = is_callable(array('\Mage', 'getEdition')) ? \Mage::getEdition() : 'Community';
+            $this->scriptVars['${contao.version}'] = VERSION . '.' . BUILD;
         }
 
         $this->scriptVars['${php.version}']     = substr(phpversion(), 0, strpos(phpversion(), '-'));
