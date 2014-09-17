@@ -6,36 +6,7 @@ The imi conrun cli tools provides some handy tools to work with Contao from comm
 
 It is based on n98-magerun.
 
-The conrun project is currently in early alpha state.
-
 For the current status check changes.txt
-
-Build Status
-------------
-
-**Latest Release**
-
-.. image:: https://travis-ci.org/netz98/imi-conrun.png?branch=master
-   :target: https://travis-ci.org/netz98/imi-conrun
-
-.. image:: https://www.versioneye.com/user/projects/51236c8b294edc00020064c5/badge.png
-   :target: https://www.versioneye.com/user/projects/51236c8b294edc00020064c5
-
-.. image:: https://poser.pugx.org/imi/conrun/v/stable.png
-   :target: https://packagist.org/packages/imi/conrun
-
-**Development Branch**
-
-.. image:: https://travis-ci.org/netz98/imi-conrun.png?branch=develop
-  :target: https://travis-ci.org/netz98/imi-conrun
-
-Compatibility
--------------
-The tools will automatically be tested for multiple PHP versions (5.3, 5.4, 5.5). It's currently currently running in various Linux distributions and Mac OS X.
-Microsoft Windows is not fully supported (some Commands like `db:dump` or `install` are excluded).
-
-The tool partially works with Contao 2 development branch.
-
 
 Installation
 ------------
