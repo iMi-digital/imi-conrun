@@ -15,9 +15,7 @@ class CreateUserCommand extends AbstractAdminUserCommand
             ->addArgument('username', InputArgument::OPTIONAL, 'Username')
             ->addArgument('email', InputArgument::OPTIONAL, 'Email, empty string = generate')
             ->addArgument('password', InputArgument::OPTIONAL, 'Password')
-            ->addArgument('firstname', InputArgument::OPTIONAL, 'Firstname')
-            ->addArgument('lastname', InputArgument::OPTIONAL, 'Lastname')
-            ->addArgument('role', InputArgument::OPTIONAL, 'Role')
+            ->addArgument('name', InputArgument::OPTIONAL, 'Name')
             ->setDescription('Create admin user.')
         ;
     }
@@ -50,64 +48,26 @@ class CreateUserCommand extends AbstractAdminUserCommand
                 $password = $dialog->ask($output, '<question>Password:</question>');
             }
 
-            // Firstname
-            if (($firstname = $input->getArgument('firstname')) === null) {
+            // Name
+            if (($name = $input->getArgument('name')) === null) {
                 $dialog = $this->getHelperSet()->get('dialog');
-                $firstname = $dialog->ask($output, '<question>Firstname:</question>');
-            }
-
-            // Lastname
-            if (($lastname = $input->getArgument('lastname')) === null) {
-                $dialog = $this->getHelperSet()->get('dialog');
-                $lastname = $dialog->ask($output, '<question>Lastname:</question>');
-            }
-
-            if (($roleName = $input->getArgument('role')) != null) {
-                $role = $this->getRoleModel()->load($roleName, 'role_name');
-                if(!$role->getId()) {
-                    $output->writeln('<error>Role was not found</error>');
-                    return;
-                }
-            } else {
-                // create new role if not yet existing
-                $role = $this->getRoleModel()->load('Development', 'role_name');
-                if(!$role->getId()) {
-                    $role->setName('Development')
-                        ->setRoleType('G')
-                        ->save();
-
-                    $resourceAll = ($this->_contaoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) ?
-                        \Mage_Backend_Model_Acl_Config::ACL_RESOURCE_ALL : 'all';
-
-                    // give "all" privileges to role
-                    $this->getRulesModel()
-                        ->setRoleId($role->getId())
-                        ->setResources(array($resourceAll))
-                        ->saveRel();
-
-                    $output->writeln('<info>The role <comment>Development</comment> was automatically created.</info>');
-                }
+                $firstname = $dialog->ask($output, '<question>Name:</question>');
             }
 
             // create new user
-            $user = $this->getUserModel()
-                ->setData(array(
+            $user = new \UserModel();
+
+            $user
+                ->setRow(array(
                     'username' => $username,
-                    'firstname' => $firstname,
-                    'lastname' => $lastname,
+                    'name' => $name,
                     'email' => $email,
-                    'password' => $password,
-                    'is_active' => 1
+                    'password' => \Encryption::hash($password),
+                    'admin' => 1,
                 ))->save();
 
-            if ($this->_contaoMajorVersion == self::MAGENTO_MAJOR_VERSION_2) {
-                $user->setRoleId($role->getId())
-                    ->save();
-            } else {
-                $user->setRoleIds(array($role->getId()))
-                    ->setRoleUserId($user->getUserId())
-                    ->saveRelations();
-            }
+
+            $user->save();
 
             $output->writeln('<info>User <comment>' . $username . '</comment> successfully created</info>');
         }

@@ -12,7 +12,7 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
     {
         $this
             ->setName('admin:user:change-password')
-            ->addArgument('username', InputArgument::OPTIONAL, 'Username')
+            ->addArgument('id', InputArgument::OPTIONAL, 'Username or Email')
             ->addArgument('password', InputArgument::OPTIONAL, 'Password')
             ->setDescription('Changes the password of a adminhtml user.')
         ;
@@ -31,13 +31,16 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
             
             $dialog = $this->getHelperSet()->get('dialog');
             
-            // Username
-            if (($username = $input->getArgument('username')) == null) {
-                $username = $dialog->ask($output, '<question>Username:</question>');
+            if (($id = $input->getArgument('id')) == null) {
+                $id = $dialog->ask($output, '<question>Username or Email:</question>');
             }
 
-            $user = $this->getUserModel()->loadByUsername($username);
-            if ($user->getId() <= 0) {
+            $user = \UserModel::findBy('username', $id);
+            if (!$user) {
+                $user = \UserModel::findBy('email', $id);
+            }
+
+            if (!$user) {
                 $output->writeln('<error>User was not found</error>');
                 return;
             }
@@ -48,11 +51,7 @@ class ChangePasswordCommand extends AbstractAdminUserCommand
             }
 
             try {
-                $result = $user->validate();
-                if (is_array($result)) {
-                    throw new \Exception(implode(PHP_EOL, $result));
-                }
-                $user->setPassword($password);
+                $user->password = \Encryption::hash($password);
                 $user->save();
                 $output->writeln('<info>Password successfully changed</info>');
             } catch (\Exception $e) {

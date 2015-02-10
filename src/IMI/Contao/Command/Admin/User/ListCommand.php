@@ -32,18 +32,18 @@ class ListCommand extends AbstractAdminUserCommand
     {
         $this->detectContao($output, true);
         if ($this->initContao()) {
-            $userList = $this->getUserModel()->getCollection();
+            $userList = \UserModel::findAll();
             $table = array();
             foreach ($userList as $user) {
                 $table[] = array(
-                    $user->getId(),
-                    $user->getUsername(),
-                    $user->getEmail(),
-                    $user->getIsActive() ? 'active' : 'inactive',
+                    $user->id,
+                    $user->username,
+                    $user->email,
+                    ($user->locked == 0) ? 'open' : date('Y-m-d H:i:s', $user->locked),
                 );
             }
             $this->getHelper('table')
-                ->setHeaders(array('id', 'username', 'email', 'status'))
+                ->setHeaders(array('id', 'username', 'email', 'locked'))
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
     }

@@ -42,12 +42,12 @@ class DeleteUserCommand extends AbstractAdminUserCommand
                 $id = $dialog->ask($output, '<question>Username or Email:</question>');
             }
 
-            $user = $this->getUserModel()->loadByUsername($id);
-            if (!$user->getId()) {
-                $user = $this->getUserModel()->load($id, 'email');
+            $user = \UserModel::findBy('username', $id);
+            if (!$user) {
+                $user = \UserModel::findBy('email', $id);
             }
 
-            if (!$user->getId()) {
+            if (!$user) {
                 $output->writeln('<error>User was not found</error>');
                 return;
             }
