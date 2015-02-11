@@ -44,12 +44,12 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    private static $logo = "
+    private static $logo = '
  _ __  __ _
 (_)  \/  (_)___ __ ___ _ _  _ _ _  _ _ _
-| | |\/| | |___/ _/ _ \ ' \| '_| || | ' \
+| | |\/| | |___/ _/ _ \ \' \| \'_| || | \' \
 |_|_|  |_|_|   \__\___/_||_|_|  \_,_|_||_|
-";
+';
     /**
      * @var \Composer\Autoload\ClassLoader
      */
