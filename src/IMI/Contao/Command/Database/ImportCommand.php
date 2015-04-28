@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Magento\Command\Database;
+namespace IMI\Contao\Command\Database;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
