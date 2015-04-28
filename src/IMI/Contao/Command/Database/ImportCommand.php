@@ -1,6 +1,6 @@
 <?php
 
-namespace IMI\Contao\Command\Database;
+namespace N98\Magento\Command\Database;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,8 +18,8 @@ class ImportCommand extends AbstractDatabaseCommand
             ->addOption('only-command', null, InputOption::VALUE_NONE, 'Print only mysql command. Do not execute')
             ->addOption('only-if-empty', null, InputOption::VALUE_NONE, 'Imports only if database is empty')
             ->addOption('optimize', null, InputOption::VALUE_NONE, 'Convert verbose INSERTs to short ones before import (not working with compression)')
-	    ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
-	    ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
+            ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
+            ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
             ->setDescription('Imports database with mysql cli client according to database defined in local.xml');
 
         $help = <<<HELP
@@ -49,12 +49,15 @@ HELP;
         $in = fopen($fileName,'r');
         $result = tempnam(sys_get_temp_dir(), 'dump') . '.sql';
         $out = fopen($result, 'w');
+
+        fwrite($out, 'SET autocommit=0;' . "\n");
         $currentTable = '';
         $maxlen = 8 * 1024 * 1024; // 8 MB
         $len = 0;
         while ($line = fgets($in)) {
             if (strtolower(substr($line, 0, 11)) == 'insert into') {
-                preg_match('/^insert into `(.*)` \(.*\) values (.*);/i', $line, $m);
+                preg_match('/^insert into `(.*)` \([^)]*\) values (.*);/i', $line, $m);
+
                 if (count($m) < 3) { // fallback for very long lines or other cases where the preg_match fails
                     if ($currentTable != '') {
                         fwrite($out, ";\n");
@@ -63,11 +66,13 @@ HELP;
                     $currentTable = '';
                     continue;
                 }
+
                 $table = $m[1];
                 $values = $m[2];
+
                 if ($table != $currentTable or ($len > $maxlen - 1000)) {
                     if ($currentTable != '') {
-                        fwrite($out, ";\n\n");
+                        fwrite($out, ";\n");
                     }
                     $currentTable = $table;
                     $insert = 'INSERT INTO `' . $table . '` VALUES ' . $values;
@@ -84,12 +89,19 @@ HELP;
                 }
                 fwrite($out, $line);
             }
+
         }
+
+        fwrite($out, ";\n");
+
+        fwrite($out, 'COMMIT;' . "\n");
+
         fclose($in);
         fclose($out);
-        return $result;
-    }
 
+        return $result;
+
+    }
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -103,12 +115,35 @@ HELP;
 
         $fileName = $this->checkFilename($input);
 
+        $compressor = $this->getCompressor($input->getOption('compression'));
+
         if ($input->getOption('optimize')) {
+            if ($input->getOption('only-command')) {
+                throw new \InvalidArgumentException('Options --only-command and --optimize are not compatible');
+            }
             if ($input->getOption('compression')) {
                 throw new \Exception('Options --compression and --optimize are not compatible');
             }
             $output->writeln('<comment>Optimizing <info>' . $fileName . '</info> to temporary file');
             $fileName = $this->optimize($fileName);
+        }
+
+        // create import command
+        $exec = $compressor->getDecompressingCommand(
+            'mysql ' . $dbHelper->getMysqlClientToolConnectionString(),
+            $fileName
+        );
+        if ($input->getOption('only-command')) {
+            $output->writeln($exec);
+            return;
+        } else {
+            if ($input->getOption('only-if-empty')
+                && count($dbHelper->getTables()) > 0
+            ) {
+                $output->writeln('<comment>Skip import. Database is not empty</comment>');
+
+                return;
+            }
         }
 
         if( $input->getOption('drop') ) {
@@ -119,27 +154,8 @@ HELP;
             $dbHelper->dropTables($output);
         }
 
-        $compressor = $this->getCompressor($input->getOption('compression'));
+        $this->doImport($output, $fileName, $exec);
 
-        // create import command
-        $exec = $compressor->getDecompressingCommand(
-            'mysql ' . $dbHelper->getMysqlClientToolConnectionString(),
-            $fileName
-        );
-
-        if ($input->getOption('only-command')) {
-            $output->writeln($exec);
-        } else {
-            if ($input->getOption('only-if-empty')
-                && count($dbHelper->getTables()) > 0
-            ) {
-                $output->writeln('<comment>Skip import. Database is not empty</comment>');
-
-                return;
-            }
-
-            $this->doImport($output, $fileName, $exec);
-        }
         if ($input->getOption('optimize')) {
             unlink($fileName);
         }
@@ -147,7 +163,7 @@ HELP;
 
     public function asText() {
         return parent::asText() . "\n" .
-            $this->getCompressionHelp();
+        $this->getCompressionHelp();
     }
 
     /**
@@ -181,7 +197,7 @@ HELP;
             . $this->dbSettings['dbname'] . '</info>'
         );
         exec($exec, $commandOutput, $returnValue);
-        if ($returnValue > 0) {
+        if ($returnValue <> 0) {
             $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
         }
         $output->writeln('<info>Finished</info>');
