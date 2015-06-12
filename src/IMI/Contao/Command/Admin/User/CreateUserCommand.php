@@ -51,7 +51,7 @@ class CreateUserCommand extends AbstractAdminUserCommand
             // Name
             if (($name = $input->getArgument('name')) === null) {
                 $dialog = $this->getHelperSet()->get('dialog');
-                $firstname = $dialog->ask($output, '<question>Name:</question>');
+                $name = $dialog->ask($output, '<question>Name:</question>');
             }
 
             // create new user
