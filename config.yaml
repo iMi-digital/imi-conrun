@@ -57,6 +57,8 @@ commands:
     - IMI\Contao\Command\ScriptCommand
     - IMI\Contao\Command\SelfUpdateCommand
     - IMI\Contao\Command\System\InfoCommand
+    - IMI\Contao\Command\System\Setup\RunCommand
+    - IMI\Contao\Command\System\Setup\PreviewCommand
 
 
   aliases: []
