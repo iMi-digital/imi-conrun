@@ -19,6 +19,7 @@ class RunCommand extends AbstractContaoCommand
             ->addOption('with-drops', null, InputOption::VALUE_NONE, 'Also execute DROP statements')
             ->addOption('skip-runonce', null, InputOption::VALUE_NONE, 'Do not execute runonce.php files');
         $help = <<<HELP
+Run SQL updates and runonce.php scripts, can optionally include DROP statements.
 This command is useful if you update your system with enabled maintenance mode.
 HELP;
         $this->setHelp($help);

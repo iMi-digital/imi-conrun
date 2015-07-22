@@ -20,7 +20,7 @@ class PreviewCommand extends AbstractContaoCommand
             ->addOption('skip-runonce', null, InputOption::VALUE_NONE, 'Do not list runonce.php files');
 
         $help = <<<HELP
-Compares module version with saved setup version in `core_resource` table and displays version mismatch.
+Preview SQL and runonce.php updates.
 HELP;
         $this->setHelp($help);
     }
