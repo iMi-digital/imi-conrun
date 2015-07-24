@@ -3,6 +3,7 @@
 namespace IMI\Contao\Command\Cache;
 
 use IMI\Contao\Application;
+use IMI\Contao\System\PurgeData;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,13 +13,32 @@ class FlushCommand extends AbstractCacheCommand
     {
         $this
             ->setName('cache:flush')
-            ->setDescription('Flush contao cache storage')
+            ->setDescription('Clean all cache folders')
         ;
     }
 
     public function isEnabled()
     {
         return $this->getApplication()->getContaoMajorVersion() == Application::MAGENTO_MAJOR_VERSION_1;
+    }
+
+    /**
+     * Check which folder caches are not clean
+     */
+    protected function getDirty()
+    {
+        $purgeData = new PurgeData();
+        $jobs = $purgeData->getJobs();
+
+        $dirty = array();
+        foreach($jobs as $key=>$job) {
+            if ($job['group'] == 'folders' && $job['count'] > 0) {
+                $dirty[] = $key;
+            }
+
+        }
+
+        return $dirty;
     }
 
     /**
@@ -30,18 +50,20 @@ class FlushCommand extends AbstractCacheCommand
     {
         $this->detectContao($output, true);
         if ($this->initContao()) {
+            foreach($GLOBALS['TL_PURGE']['folders'] as $job=>$data) {
+                $callback = $data['callback'];
+                $class = new $callback[0];
+                $class->$callback[1]();
+            };
 
-            \Mage::app()->loadAreaPart('adminhtml', 'events');
-            \Mage::dispatchEvent('adminhtml_cache_flush_all', array('output' => $output));
-            \Mage::app()->getCacheInstance()->flush();
-            $output->writeln('<info>Cache cleared</info>');
+            $dirty = $this->getDirty();
 
-            /* Since Contao 1.10 we have an own cache handler for FPC */
-            if ($this->_contaoEnterprise && version_compare(\Mage::getVersion(), '1.11.0.0', '>=')) {
-                \Enterprise_PageCache_Model_Cache::getCacheInstance()->flush();
-                $output->writeln('<info>FPC cleared</info>');
+            if (count($dirty) == 0) {
+                $output->writeln('<info>Caches folders cleared</info>');
+            } else {
+                $output->writeln('<error>Some cache folders could not be cleared. Permission problems? You might be able to fix this by setting an umask or using another user.</error>');
+                $output->writeln('<info>Dirty caches:</info> ' . implode(', ', $dirty));
             }
-
         }
     }
 }

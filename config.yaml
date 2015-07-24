@@ -59,6 +59,8 @@ commands:
     - IMI\Contao\Command\System\InfoCommand
     - IMI\Contao\Command\System\Setup\RunCommand
     - IMI\Contao\Command\System\Setup\PreviewCommand
+    - IMI\Contao\Command\Cache\FlushCommand
+    - IMI\Contao\Command\Cache\ListCommand
 
 
   aliases: []

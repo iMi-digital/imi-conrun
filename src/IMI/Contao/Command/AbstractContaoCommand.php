@@ -174,6 +174,11 @@ abstract class AbstractContaoCommand extends Command
         return $init;
     }
 
+    protected function initLang()
+    {
+
+    }
+
     /**
      * Search for contao root folder
      *

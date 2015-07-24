@@ -2,6 +2,7 @@
 
 namespace IMI\Contao\Command\Cache;
 
+use IMI\Contao\System\PurgeData;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,14 +14,13 @@ class ListCommand extends AbstractCacheCommand
     {
         $this
             ->setName('cache:list')
-            ->setDescription('Lists all contao caches')
+            ->setDescription('Lists all Contao caches')
             ->addOption(
                 'format',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Output Format. One of [' . implode(',', RendererFactory::getFormats()) . ']'
-            )
-        ;
+            );
     }
 
     /**
@@ -32,19 +32,38 @@ class ListCommand extends AbstractCacheCommand
     {
         $this->detectContao($output, true);
 
-        if ($this->initContao()) {
-            $cacheTypes = $this->_getCacheModel()->getTypes();
+        if (!$this->initContao()) {
+            return;
+        }
+
+        $purgeData = new PurgeData();
+        $jobs = $purgeData->getJobs();
+        $grouped = array(
+            'tables' => array(), 'files' => array(), 'custom' => array()
+        );
+
+        foreach ($jobs as $key => $job) {
+            $grouped[$job['group']][$key] = $job;
+        }
+
+        foreach ($grouped as $groupKey => $jobs) {
             $table = array();
-            foreach ($cacheTypes as $cacheCode => $cacheInfo) {
+            foreach ($jobs as $key=>$job) {
                 $table[] = array(
-                    $cacheCode,
-                    $cacheInfo['status'] ? 'enabled' : 'disabled'
+                    $key,
+                    ucwords(str_replace('Purge the ', '', $job['title'])),
+                    $job['count'],
+                    $job['size'],
                 );
             }
 
+            $this->writeSection($output, ucfirst($groupKey));
+
             $this->getHelper('table')
-                ->setHeaders(array('code', 'status'))
+                ->setHeaders(array('code', 'title', 'count', 'size'))
                 ->renderByFormat($output, $table, $input->getOption('format'));
         }
+
+
     }
 }
