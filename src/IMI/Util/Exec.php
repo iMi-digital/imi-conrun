@@ -1,6 +1,6 @@
 <?php
 
-namespace N98\Util;
+namespace IMI\Util;
 
 use RuntimeException;
 

@@ -3,6 +3,7 @@
 namespace IMI\Contao\Command\Database;
 
 use IMI\Util\OperatingSystem;
+use IMI\Util\Exec;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -190,7 +191,7 @@ HELP;
             if (!$input->getOption('stdout') && !$input->getOption('only-command')
                 && !$input->getOption('print-only-filename')
             ) {
-                $output->writeln('<comment>Excluded: <info>' . implode(' ', $stripTables)
+                $output->writeln('<comment>Excluded: <info>' . implode(' ', $excludeTables)
                     . '</info></comment>'
                 );
             }
@@ -274,10 +275,10 @@ HELP;
                 if ($input->getOption('stdout')) {
                     passthru($exec, $returnValue);
                 } else {
-                    exec($exec, $commandOutput, $returnValue);
+                    Exec::run($exec, $commandOutput, $returnValue);
                 }
                 if ($returnValue > 0) {
-                    $output->writeln('<error>' . implode(PHP_EOL, $commandOutput) . '</error>');
+                    $output->writeln('<error>' . $commandOutput . '</error>');
                     $output->writeln('<error>Return Code: ' . $returnValue . '. ABORTED.</error>');
 
                     return;
