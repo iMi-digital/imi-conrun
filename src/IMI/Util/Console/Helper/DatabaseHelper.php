@@ -32,19 +32,21 @@ class DatabaseHelper extends AbstractHelper
     /**
      * @param OutputInterface $output
      * @param bool            $silent
+     *
      * @throws \Exception
      *
      * @throws \Exception
      * @return void
      */
-    public function detectDbSettings(OutputInterface $output, $silent = true)
+    public function detectDbSettings(OutputInterface $output)
     {
         if ($this->dbSettings == null) {
             $command = $this->getHelperSet()->getCommand();
             if ($command == null) {
                 $application = new Application();
             } else {
-                $application = $command->getApplication(); /* @var $application Application */
+                $application = $command->getApplication();
+                /* @var $application Application */
             }
             $application->detectContao();
 
@@ -64,6 +66,7 @@ class DatabaseHelper extends AbstractHelper
      * Connects to the database without initializing contao
      *
      * @param OutputInterface $output = null
+     *
      * @throws \Exception
      * @return \PDO
      */
@@ -150,6 +153,7 @@ class DatabaseHelper extends AbstractHelper
      * Check whether current mysql user has $privilege privilege
      *
      * @param string $privilege
+     *
      * @return bool
      */
     public function mysqlUserHasPrivilege($privilege)
@@ -195,6 +199,7 @@ class DatabaseHelper extends AbstractHelper
      * Get mysql variable value
      *
      * @param string $variable
+     *
      * @return bool|string
      */
     public function getMysqlVariableValue($variable)
@@ -210,6 +215,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param $commandConfig
+     *
      * @throws \Exception
      * @internal param $config
      * @return array $commandConfig
@@ -299,6 +305,7 @@ class DatabaseHelper extends AbstractHelper
      * Get list of db tables
      *
      * @param bool $withoutPrefix
+     *
      * @return array
      */
     public function getTables($withoutPrefix = false)
@@ -323,6 +330,41 @@ class DatabaseHelper extends AbstractHelper
             return array_map(function($tableName) use ($prefix){
                     return str_replace($prefix, '', $tableName);
                 },$result);
+        }
+
+        return array();
+    }
+
+    /**
+     * Get list of db tables status
+     *
+     * @param bool $withoutPrefix
+     *
+     * @return array
+     */
+    public function getTablesStatus($withoutPrefix = false)
+    {
+        $db     = $this->getConnection();
+        $prefix = $this->dbSettings['prefix'];
+        if (strlen($prefix) > 0) {
+            $statement = $db->prepare('SHOW TABLE STATUS LIKE :like', array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
+            $statement->execute(
+                array(':like' => $prefix . '%')
+            );
+        } else {
+            $statement = $db->query('SHOW TABLE STATUS');
+        }
+
+        if ($statement) {
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $return = array();
+            foreach ($result as $table) {
+                if (true === $withoutPrefix) {
+                    $table['Name'] = str_replace($prefix, '', $table['Name']);
+                }
+                $return[$table['Name']] = $table;
+            }
+            return $return;
         }
 
         return array();
@@ -358,6 +400,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
+     *
      * @throws \Exception
      */
     public function dropDatabase($output)
@@ -370,6 +413,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
+     *
      * @throws \Exception
      */
     public function dropTables($output)
@@ -388,6 +432,7 @@ class DatabaseHelper extends AbstractHelper
 
     /**
      * @param OutputInterface $output
+     *
      * @throws \Exception
      */
     public function createDatabase($output)
@@ -396,5 +441,61 @@ class DatabaseHelper extends AbstractHelper
         $db = $this->getConnection();
         $db->query('CREATE DATABASE IF NOT EXISTS `' .  $this->dbSettings['dbname'] . '`');
         $output->writeln('<info>Created database</info> <comment>' . $this->dbSettings['dbname'] . '</comment>');
+    }
+
+    /**
+     * @param string      $command
+     * @param string|null $variable
+     *
+     * @return array
+     * @throws \Exception
+     */
+    private function runShowCommand($command, $variable = null)
+    {
+        $db = $this->getConnection();
+
+        if (null !== $variable) {
+            $statement = $db->prepare(
+                'SHOW /*!50000 GLOBAL */ ' . $command . ' LIKE :like',
+                array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY)
+            );
+            $statement->execute(
+                array(':like' => $variable)
+            );
+        } else {
+            $statement = $db->query('SHOW /*!50000 GLOBAL */ ' . $command);
+        }
+
+        if ($statement) {
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $return = array();
+            foreach ($result as $row) {
+                $return[$row['Variable_name']] = $row['Value'];
+            }
+            return $return;
+        }
+        return array();
+    }
+
+    /**
+     * @param string|null $variable
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getGlobalVariables($variable = null)
+    {
+        return $this->runShowCommand('VARIABLES', $variable);
+    }
+
+    /**
+     * @param string|null $variable
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getGlobalStatus($variable = null)
+    {
+        return $this->runShowCommand('STATUS', $variable);
     }
 }

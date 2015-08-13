@@ -13,23 +13,46 @@ class Filesystem
      */
     public function recursiveCopy($src, $dst, $blacklist = array())
     {
-        $dir = opendir($src);
-        @mkdir($dst);
-        while (false !== ($file = readdir($dir))) {
-            if (($file != '.') && ($file != '..') && !in_array($file, $blacklist)) {
+        if (!is_dir($dst)) {
+            @mkdir($dst, 0777, true);
+        }
+
+        if (!is_dir($dst)) {
+            throw new RuntimeException(sprintf('Destination directory <%s> error', $dst));
+        }
+
+        $handle = opendir($src);
+
+        if (!$handle) {
+            throw new RuntimeException(sprintf('Source directory <%s> error', $src));
+        }
+
+        $skip = array_merge(array(".", ".."), $blacklist);
+        $stack = array();
+
+        while (false !== ($file = readdir($handle))) {
+            if (in_array($file, $skip)) {
+                continue;
+            }
+
                 if (is_dir($src . '/' . $file)) {
-                    $this->recursiveCopy($src . '/' . $file, $dst . '/' . $file, $blacklist);
+                $stack[] = $file;
                 } else {
                     copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
+        closedir($handle);
+
+        foreach ($stack as $file) {
+            $this->recursiveCopy($src . '/' . $file, $dst . '/' . $file, $blacklist);
         }
         closedir($dir);
     }
 
     /**
      * @param string $directory
-     * @param bool empty
+     * @param bool $empty
+     *
      * @see http://lixlpixel.org/recursive_function/php/recursive_directory_delete/
      *
      * @return bool
@@ -37,56 +60,59 @@ class Filesystem
     public function recursiveRemoveDirectory($directory, $empty = false)
     {
         // if the path has a slash at the end we remove it here
-        if (substr($directory, -1) == '/') {
+        if (substr($directory, -1) === '/') {
             $directory = substr($directory, 0, -1);
         }
 
         // if the path is not valid or is not a directory ...
-        if (!file_exists($directory) || !is_dir($directory)) {
+        // ... if the path is not readable
+        if (!is_dir($directory) || !is_readable($directory)) {
             return false;
-
-            // ... if the path is not readable
-        } elseif (!is_readable($directory)) {
-            return false;
-        } else {
+        }
 
             // we open the directory
             $handle = opendir($directory);
 
+        if (!$handle) {
+            throw new RuntimeException(sprintf('Directory <%s> error', $directory));
+        }
+
+        $skip = array(".", "..");
+
             // and scan through the items inside
-            while (false !== ($item = readdir($handle))) {
+        while (false !== ($file = readdir($handle))) {
                 // if the filepointer is not the current directory
                 // or the parent directory
-                if ($item != '.' && $item != '..') {
-                    // we build the new path to delete
-                    $path = $directory . '/' . $item;
-
-                    // if the new path is a directory
-                    if (is_dir($path)) {
-                        // we call this function with the new path
-                        $this->recursiveRemoveDirectory($path);
-
-                        // if the new path is a file
-                    } else {
-                        // we remove the file
-                        unlink($path);
-                    }
-                }
+            if (in_array($file, $skip)) {
+                continue;
             }
-            // close the directory
+
+            // we build the new path to delete
+            $path = $directory . '/' . $file;
+
+            // if the new path is a directory
+            // don't recursively delete symlinks - just remove the actual link
+            // this is helpful for extensions sym-linked from vendor directory
+            // previous behaviour would wipe out the files in the vendor directory
+            if (!is_link($path) && is_dir($path)) {
+                // we call this function with the new path
+                $this->recursiveRemoveDirectory($path);
+
+                // if the new path is a file
+                } else {
+                    // we remove the file
+                    unlink($path);
+               }
+            }
             closedir($handle);
 
-            // if the option to empty is not set to true
-            if ($empty == false) {
-                // try to delete the now empty directory
-                if (!rmdir($directory)) {
-                    // return false if not possible
-                    return false;
+        // if the option not empty
+        if (!$empty) {
+            return rmdir($directory);
                 }
-            }
+
             // return success
             return true;
-        }
     }
 
     /**
@@ -97,11 +123,10 @@ class Filesystem
      *
      * @return string
      */
-    public static function humandFilesize($bytes, $decimals = 2)
+    public static function humanFileSize($bytes, $decimals = 2)
     {
-        $sz = 'BKMGTP';
+        $units = array('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y');
         $factor = floor((strlen($bytes) - 1) / 3);
-
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+        return sprintf("%.{$decimals}f%s", $bytes / pow(1024, $factor), $units[$factor]);
     }
 }

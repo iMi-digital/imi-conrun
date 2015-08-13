@@ -48,6 +48,8 @@ commands:
     - IMI\Contao\Command\Database\ImportCommand
     - IMI\Contao\Command\Database\InfoCommand
     - IMI\Contao\Command\Database\QueryCommand
+    - IMI\Contao\Command\Database\VariablesCommand
+    - IMI\Contao\Command\Database\StatusCommand
     - IMI\Contao\Command\Database\Maintain\CheckTablesCommand
     - IMI\Contao\Command\Admin\User\CreateUserCommand
     - IMI\Contao\Command\Admin\User\ListCommand
