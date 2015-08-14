@@ -64,6 +64,8 @@ commands:
     - IMI\Contao\Command\Cache\FlushCommand
     - IMI\Contao\Command\Cache\ListCommand
 
+  disabled:
+    - dummy
 
   aliases: []
 

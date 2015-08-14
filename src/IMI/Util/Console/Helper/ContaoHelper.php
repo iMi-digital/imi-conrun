@@ -79,7 +79,7 @@ class ContaoHelper extends AbstractHelper
     public function detect($folder, $subFolders = array())
     {
         $folders = $this->splitPathFolders($folder);
-        $folders = $this->checkContrunFile($folders);
+        $folders = $this->checkConrunFile($folders);
         $folders = $this->checkModman($folders);
         $folders = array_merge($folders, $subFolders);
 
@@ -198,7 +198,7 @@ class ContaoHelper extends AbstractHelper
      *
      * @return array
      */
-    protected function checkContrunFile($folders)
+    protected function checkConrunFile($folders)
     {
         foreach (array_reverse($folders) as $searchFolder) {
             if (!is_readable($searchFolder)) {

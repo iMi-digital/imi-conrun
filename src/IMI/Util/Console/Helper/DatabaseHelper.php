@@ -49,7 +49,6 @@ class DatabaseHelper extends AbstractHelper
                 /* @var $application Application */
             }
             $application->detectContao();
-
             $application->initContao();
 
             $this->dbSettings = array(

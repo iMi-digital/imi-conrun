@@ -39,7 +39,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '1.3.1';
+    const APP_VERSION = '1.3.2';
 
     /**
      * @var string
@@ -71,6 +71,11 @@ class Application extends BaseApplication
     protected $partialConfig = array();
 
     /**
+     * @var bool
+     */
+    protected $_contaoDetected = false;
+
+    /**
      * @var string
      */
     protected $_contaoRootFolder = null;
@@ -94,6 +99,16 @@ class Application extends BaseApplication
      * @var bool
      */
     protected $_isPharMode = false;
+
+    /**
+     * @var bool
+     */
+    protected $_conrunStopFileFound = false;
+
+    /**
+     * @var string
+     */
+    protected $_conrunStopFileFolder = null;
 
     /**
      * @var bool
@@ -177,23 +192,29 @@ class Application extends BaseApplication
      */
     public function detectContao(InputInterface $input = null, OutputInterface $output = null)
     {
+        // do not detect magento twice
+        if ($this->_contaoDetected) {
+            return;
+        }
+
+        if (null === $input) {
+            $input = new ArgvInput();
+        }
+
+        if (null === $output) {
+            $output = new ConsoleOutput();
+        }
+
         if ($this->getContaoRootFolder() === null) {
-            $this->_checkRootDirOption();
-            if (function_exists('exec')) {
-                if (OperatingSystem::isWindows()) {
-                    $folder = exec('@echo %cd%'); // @TODO not currently tested!!!
-                } else {
-                    $folder = exec('pwd');
-                }
-            } else {
-                $folder = getcwd();
-            }
+            $this->_checkRootDirOption($input);
+            $folder = OperatingSystem::getCwd();
         } else {
             $folder = $this->getContaoRootFolder();
         }
 
         $this->getHelperSet()->set(new ContaoHelper($input, $output), 'contao');
-        $contaoHelper = $this->getHelperSet()->get('contao'); /* @var $contaoHelper ContaoHelper */
+        $contaoHelper = $this->getHelperSet()->get('contao');
+        /* @var $contaoHelper ContaoHelper */
         if (!$this->_directRootDir) {
             $subFolders = $this->getDetectSubFolders();
         } else {
@@ -240,6 +261,21 @@ class Application extends BaseApplication
                 $this->autoloader->add($prefix, $path);
             }
         }
+
+        if (isset($this->config['autoloaders_psr4']) && is_array($this->config['autoloaders_psr4'])) {
+            foreach ($this->config['autoloaders_psr4'] as $prefix => $path) {
+                $this->autoloader->addPsr4($prefix, $path);
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function hasCustomCommands()
+    {
+        return isset($this->config['commands']['customCommands'])
+        && is_array($this->config['commands']['customCommands']);
     }
 
     /**
@@ -247,20 +283,34 @@ class Application extends BaseApplication
      */
     protected function registerCustomCommands()
     {
-        if (isset($this->config['commands']['customCommands'])
-            && is_array($this->config['commands']['customCommands'])
-        ) {
-            foreach ($this->config['commands']['customCommands'] as $commandClass) {
-                if (is_array($commandClass)) { // Support for key => value (name -> class)
-                    $resolvedCommandClass = current($commandClass);
-                    $command = new $resolvedCommandClass();
-                    $command->setName(key($commandClass));
-                } else {
-                    $command = new $commandClass();
-                }
-                $this->add($command);
-            }
+        if (!$this->hasCustomCommands()) {
+            return;
         }
+
+        foreach ($this->config['commands']['customCommands'] as $commandClass) {
+            if (is_array($commandClass)) { // Support for key => value (name -> class)
+                $resolvedCommandClass = current($commandClass);
+                if ($this->isCommandDisabled($resolvedCommandClass)) {
+                    continue;
+                }
+                $command = new $resolvedCommandClass();
+                $command->setName(key($commandClass));
+            } elseif ($this->isCommandDisabled($commandClass)) {
+                continue;
+            } else {
+                $command = new $commandClass();
+            }
+            $this->add($command);
+        }
+    }
+
+    /**
+     * @param string $class
+     * @return bool
+     */
+    protected function isCommandDisabled($class)
+    {
+        return in_array($class, $this->config['commands']['disabled']);
     }
 
     /**
@@ -333,7 +383,7 @@ class Application extends BaseApplication
     public function checkVarDir(OutputInterface $output)
     {
         if (OutputInterface::VERBOSITY_NORMAL <= $output->getVerbosity()) {
-            $tempVarDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'contao' . DIRECTORY_SEPARATOR .  'var';
+            $tempVarDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'contao' . DIRECTORY_SEPARATOR . 'var';
 
             if (is_dir($tempVarDir)) {
                 $this->detectContao(null, $output);
@@ -348,7 +398,7 @@ class Application extends BaseApplication
                     $this->initContao();
                 } catch (\Exception $e) {
                     $message = 'Cannot initialize Contao. Please check your configuration. '
-                             . 'Some imi-conrun command will not work. Got message: ';
+                        . 'Some imi-conrun command will not work. Got message: ';
                     if (OutputInterface::VERBOSITY_VERY_VERBOSE <= $output->getVerbosity()) {
                         $message .= $e->getTraceAsString();
                     } else {
@@ -407,7 +457,7 @@ class Application extends BaseApplication
     public function getLongVersion()
     {
         return parent::getLongVersion() . ' by <info>iMi digital GmbH</info>' . PHP_EOL .
-            'portions by <info>netz98 new media GmbH</info>';
+        'portions by <info>netz98 new media GmbH</info>';
     }
 
     /**
@@ -477,7 +527,7 @@ class Application extends BaseApplication
     /**
      * Runs the current application with possible command aliases
      *
-     * @param InputInterface $input  An Input instance
+     * @param InputInterface $input An Input instance
      * @param OutputInterface $output An Output instance
      *
      * @return integer 0 if everything went fine, or an error code
@@ -579,32 +629,45 @@ class Application extends BaseApplication
      *
      * @return void
      */
-    public function init($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
+    public function init(array $initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
     {
-        if (!$this->_isInitialized) {
-            // Suppress DateTime warnings
-            date_default_timezone_set(@date_default_timezone_get());
-
-            $loadExternalConfig = !$this->_checkSkipConfigOption();
-            if ($output === null) {
-                $output = new NullOutput();
-            }
-            $configLoader = $this->getConfigurationLoader($initConfig, $output);
-            $this->partialConfig = $configLoader->getPartialConfig($loadExternalConfig);
-            $this->detectContao($input, $output);
-            $configLoader->loadStageTwo($this->_contaoRootFolder, $loadExternalConfig);
-            $this->config = $configLoader->toArray();;
-            $this->dispatcher = new EventDispatcher();
-            $this->setDispatcher($this->dispatcher);
-            if ($this->autoloader) {
-                $this->registerCustomAutoloaders();
-                $this->registerEventSubscribers();
-                $this->registerCustomCommands();
-            }
-            $this->registerHelpers();
-
-            $this->_isInitialized = true;
+        if ($this->_isInitialized) {
+            return;
         }
+
+        // Suppress DateTime warnings
+        date_default_timezone_set(@date_default_timezone_get());
+
+        // Initialize EventDispatcher early
+        $this->dispatcher = new EventDispatcher();
+        $this->setDispatcher($this->dispatcher);
+
+        if (null === $input) {
+            $input = new ArgvInput();
+        }
+
+        if ($output === null) {
+            $output = new NullOutput();
+        }
+
+        // initialize config
+        $configLoader = $this->getConfigurationLoader($initConfig, $output);
+        $loadExternalConfig = !$this->_checkSkipConfigOption($input);
+        $this->partialConfig = $configLoader->getPartialConfig($loadExternalConfig);
+        $this->detectContao($input, $output);
+        $configLoader->loadStageTwo($this->_contaoRootFolder, $loadExternalConfig, $this->_conrunStopFileFolder);
+
+        $this->config = $configLoader->toArray();
+
+        if ($this->autoloader) {
+            $this->registerCustomAutoloaders();
+            $this->registerEventSubscribers();
+            $this->registerCustomCommands();
+        }
+
+        $this->registerHelpers();
+
+        $this->_isInitialized = true;
     }
 
     /**
@@ -612,16 +675,20 @@ class Application extends BaseApplication
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    public function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
+    public
+    function reinit($initConfig = array(), InputInterface $input = null, OutputInterface $output = null)
     {
         $this->_isInitialized = false;
+        $this->_contaoDetected = false;
+        $this->_contaoRootFolder = null;
         $this->init($initConfig, $input, $output);
     }
 
     /**
      * @return void
      */
-    protected function registerEventSubscribers()
+    protected
+    function registerEventSubscribers()
     {
         foreach ($this->config['event']['subscriber'] as $subscriberClass) {
             $subscriber = new $subscriberClass();
@@ -630,29 +697,30 @@ class Application extends BaseApplication
     }
 
     /**
+     * @param InputInterface $input
      * @return bool
      */
-    protected function _checkSkipConfigOption()
+    protected
+    function _checkSkipConfigOption(InputInterface $input)
     {
-        $skipConfigOption = getopt('', array('skip-config'));
-
-        return count($skipConfigOption) > 0;
+        return $input->hasParameterOption('--skip-config');
     }
 
     /**
+     * @param InputInterface $input
      * @return string
      */
-    protected function _checkRootDirOption()
+    protected
+    function _checkRootDirOption(InputInterface $input)
     {
-        $specialGlobalOptions = getopt('', array('root-dir:'));
+        $definedRootDir = $input->getParameterOption('--root-dir');
 
-        if (count($specialGlobalOptions) > 0) {
-            if (isset($specialGlobalOptions['root-dir'][0])
-                && $specialGlobalOptions['root-dir'][0] == '~'
-            ) {
-                $specialGlobalOptions['root-dir'] = OperatingSystem::getHomeDir() . substr($specialGlobalOptions['root-dir'], 1);
+        if (!empty($definedRootDir)) {
+            if ($definedRootDir[0] == '~') {
+                $definedRootDir = OperatingSystem::getHomeDir() . substr($definedRootDir, 1);
             }
-            $folder = realpath($specialGlobalOptions['root-dir']);
+
+            $folder = realpath($definedRootDir);
             $this->_directRootDir = true;
             if (is_dir($folder)) {
                 \chdir($folder);
@@ -665,7 +733,8 @@ class Application extends BaseApplication
     /**
      * @return void
      */
-    protected function _initContao2()
+    protected
+    function _initContao2()
     {
         if ($this->_contao2EntryPoint === null) {
             require_once $this->getContaoRootFolder() . '/app/bootstrap.php';
@@ -674,7 +743,7 @@ class Application extends BaseApplication
                 $params = array(
                     \Mage::PARAM_RUN_CODE => 'admin',
                     \Mage::PARAM_RUN_TYPE => 'store',
-                    'entryPoint'          => basename(__FILE__),
+                    'entryPoint' => basename(__FILE__),
                 );
                 try {
                     $this->_contao2EntryPoint = new ContrunEntryPoint(BP, $params);
@@ -694,7 +763,8 @@ class Application extends BaseApplication
     /**
      * @return void
      */
-    protected function _initContao1()
+    protected
+    function _initContao1()
     {
         $initSettings = $this->config['init'];
 
@@ -712,7 +782,9 @@ class Application extends BaseApplication
     /**
      * @return void
      */
-    protected function _restoreAutoloaders($loaders) {
+    protected
+    function _restoreAutoloaders($loaders)
+    {
         $current_loaders = spl_autoload_functions();
         foreach ($loaders as $function) {
             if (!in_array($function, $current_loaders)) {
@@ -724,7 +796,8 @@ class Application extends BaseApplication
     /**
      * @return \Symfony\Component\EventDispatcher\EventDispatcher
      */
-    public function getDispatcher()
+    public
+    function getDispatcher()
     {
         return $this->dispatcher;
     }
@@ -734,7 +807,8 @@ class Application extends BaseApplication
      * @param OutputInterface $output
      * @return ConfigurationLoader
      */
-    public function getConfigurationLoader($initConfig = array(), OutputInterface $output)
+    public
+    function getConfigurationLoader(array $initConfig = array(), OutputInterface $output)
     {
         if ($this->configurationLoader === null) {
             $this->configurationLoader = new ConfigurationLoader(
@@ -752,7 +826,8 @@ class Application extends BaseApplication
      *
      * @return $this
      */
-    public function setConfigurationLoader($configurationLoader)
+    public
+    function setConfigurationLoader($configurationLoader)
     {
         $this->configurationLoader = $configurationLoader;
 
@@ -762,7 +837,8 @@ class Application extends BaseApplication
     /**
      * @param OutputInterface $output
      */
-    protected function _addOutputStyles(OutputInterface $output)
+    protected
+    function _addOutputStyles(OutputInterface $output)
     {
         $output->getFormatter()->setStyle('debug', new OutputFormatterStyle('magenta', 'white'));
         $output->getFormatter()->setStyle('warning', new OutputFormatterStyle('red', 'yellow', array('bold')));
