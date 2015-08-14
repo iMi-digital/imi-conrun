@@ -38,11 +38,6 @@ HELP;
             return false;
         }
 
-        $this->detectContao($output);
-        if (!$this->initContao()) {
-            return;
-        }
-
         $withDrops = $input->getOption('with-drops');
 
         $installer = new \IMI\Contao\System\Installer();

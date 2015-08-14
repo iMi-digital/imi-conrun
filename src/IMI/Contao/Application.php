@@ -39,7 +39,7 @@ class Application extends BaseApplication
     /**
      * @var string
      */
-    const APP_VERSION = '1.3.2';
+    const APP_VERSION = '1.3.3';
 
     /**
      * @var string
@@ -774,6 +774,8 @@ class Application extends BaseApplication
             define('TL_MODE', 'FE');
 
             require_once $this->getContaoRootFolder() . '/system/initialize.php';
+
+            \System::loadLanguageFile('default');
             // Restore autoloaders that might be removed by extensions that overwrite Varien/Autoload
             $this->_restoreAutoloaders($autoloaders);
         }
