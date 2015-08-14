@@ -63,6 +63,7 @@ commands:
     - IMI\Contao\Command\System\Setup\PreviewCommand
     - IMI\Contao\Command\Cache\FlushCommand
     - IMI\Contao\Command\Cache\ListCommand
+    - IMI\Contao\Command\Cache\BuildCommand
 
   disabled:
     - dummy
