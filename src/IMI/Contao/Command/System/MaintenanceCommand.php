@@ -3,6 +3,7 @@
 namespace IMI\Contao\Command\System;
 
 use IMI\Contao\Command\AbstractContaoCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,6 +16,7 @@ class MaintenanceCommand extends AbstractContaoCommand
             ->setName('sys:maintenance')
             ->addOption('on', null, InputOption::VALUE_NONE, 'Force maintenance mode')
             ->addOption('off', null, InputOption::VALUE_NONE, 'Disable maintenance mode')
+            ->addArgument('config-file', InputArgument::OPTIONAL, 'Config file name (default localconfig.php)')
             ->setDescription('Toggles maintenance mode.')
         ;
     }
@@ -27,28 +29,47 @@ class MaintenanceCommand extends AbstractContaoCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->detectContao($output);
-        $flagFile = $this->_contaoRootFolder . '/maintenance.flag';
 
+        $configName = $input->getArgument('config-file');
+        if (!$configName) {
+            $configName = 'localconfig.php';
+
+        }
         if ($input->getOption('off')) {
-            $this->_switchOff($output, $flagFile);
+            $this->_switchOff($output, $configName);
         } elseif ($input->getOption('on')) {
-            $this->_switchOn($output, $flagFile);
+            $this->_switchOn($output, $configName);
         } else {
-            if (file_exists($flagFile)) {
-                $this->_switchOff($output, $flagFile);
+            require $this->_contaoRootFolder . '/system/config/localconfig.php';
+
+            if (isset($GLOBALS['TL_CONFIG']['maintenanceMode']) && $GLOBALS['TL_CONFIG']['maintenanceMode'] == true) {
+                $this->_switchOff($output, $configName);
             } else {
-                $this->_switchOn($output, $flagFile);
+                $this->_switchOn($output, $configName);
             }
         }
+    }
+
+    protected function setMaintenance($configName, $on = true)
+    {
+        $fileName = $this->_contaoRootFolder . '/system/config/' . $configName;
+        $content = file_get_contents($fileName);
+
+        $content = preg_replace("#^(\\\$GLOBALS\\['TL_CONFIG'\\]\\['maintenanceMode'\\][\\s]*=[\\s]*)(true|false)#im", "$1" . ($on ? 'true' : 'false'), $content, -1, $count);
+        if ($count == 0) {
+            $content .= PHP_EOL . "\$GLOBALS['TL_CONFIG']['maintenanceMode'] = " . ($on ? 'true' : 'false') . ";" . PHP_EOL;
+        }
+
+        file_put_contents($fileName, $content);
     }
 
     /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param $flagFile
      */
-    protected function _switchOn(OutputInterface $output, $flagFile)
+    protected function _switchOn(OutputInterface $output, $configName)
     {
-        touch($flagFile);
+        $this->setMaintenance($configName, true);
         $output->writeln('Maintenance mode <info>on</info>');
     }
 
@@ -56,11 +77,9 @@ class MaintenanceCommand extends AbstractContaoCommand
      * @param OutputInterface $output
      * @param string $flagFile
      */
-    protected function _switchOff($output, $flagFile)
+    protected function _switchOff(OutputInterface $output, $configName)
     {
-        if (file_exists($flagFile)) {
-            unlink($flagFile);
-        }
+        $this->setMaintenance($configName, false);
         $output->writeln('Maintenance mode <info>off</info>');
     }
 }
