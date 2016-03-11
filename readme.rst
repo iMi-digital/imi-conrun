@@ -268,3 +268,7 @@ Thanks to
 ---------
 
 * netz98 Team for n98-magerun
+
+.. image:: https://badges.gitter.im/iMi-digital/imi-conrun.svg
+   :alt: Join the chat at https://gitter.im/iMi-digital/imi-conrun
+   :target: https://gitter.im/iMi-digital/imi-conrun?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
