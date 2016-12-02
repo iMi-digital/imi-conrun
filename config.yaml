@@ -65,6 +65,7 @@ commands:
     - IMI\Contao\Command\Cache\FlushCommand
     - IMI\Contao\Command\Cache\ListCommand
     - IMI\Contao\Command\Cache\BuildCommand
+    - IMI\Contao\Command\ThirdParty\Efg\BuildDcaCommand
 
   disabled:
     - dummy
