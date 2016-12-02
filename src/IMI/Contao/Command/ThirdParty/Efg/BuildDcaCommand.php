@@ -14,7 +14,7 @@ class BuildDcaCommand extends AbstractContaoCommand
     {
         $this
             ->setName('thirdparty:efg:build-dca')
-            ->setDescription('Clean all cache folders');
+            ->setDescription('Build DCAs for EFG');
     }
 
     /**
@@ -32,12 +32,14 @@ class BuildDcaCommand extends AbstractContaoCommand
             throw new \ErrorException('EFG not present in the project');
         }
         $backend = new \Efg\FormdataBackend();
+        $forms = array();
         $allForms = \FormModel::findAll();
         foreach ($allForms as $form) {
             $arrForm = $form->row();
             $strFormKey = (!empty($arrForm['alias'])) ? $arrForm['alias'] : str_replace('-', '_', standardize($arrForm['title']));
-            $backend->updateConfig(array($strFormKey => $arrForm));
+            $forms[$strFormKey] = $arrForm;
         }
+        $backend->updateConfig($forms);
         $output->writeln('<info>DCAs generated. You might want to clean / rebuild the DCA cache.</info>');
     }
 }
