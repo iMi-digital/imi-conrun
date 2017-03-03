@@ -16,7 +16,7 @@
         "symfony/yaml": "2.5.2",
         "symfony/process": "2.5.2",
         "symfony/validator": "2.5.2",
-        "imi/junit-xml": "1.0.0",
+        "n98/junit-xml": "1.0.0",
         "fzaninotto/faker": "1.4.0",
         "composer/composer": "1.0.*@dev",
         "twig/twig": "1.*"
