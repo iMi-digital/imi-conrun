@@ -2,7 +2,7 @@
 
 namespace IMI\Util;
 
-class String
+class BinaryString
 {
     /**
      * @param $delimiter

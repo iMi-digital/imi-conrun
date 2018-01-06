@@ -56,7 +56,7 @@ HELP;
 
                 $indexCodes = $this->getHelper('dialog')->askAndValidate($output, $question, function($typeInput) use ($indexerList) {
                     if (strstr($typeInput, ',')) {
-                        $typeInputs = \IMI\Util\String::trimExplodeEmpty(',', $typeInput);
+                        $typeInputs = \IMI\Util\BinaryString::trimExplodeEmpty(',', $typeInput);
                     } else {
                         $typeInputs = array($typeInput);
                     }
@@ -74,7 +74,7 @@ HELP;
                 });
             } else {
                 // take cli argument
-                $indexCodes = \IMI\Util\String::trimExplodeEmpty(',', $indexCode);
+                $indexCodes = \IMI\Util\BinaryString::trimExplodeEmpty(',', $indexCode);
             }
 
             foreach ($indexCodes as $indexCode) {

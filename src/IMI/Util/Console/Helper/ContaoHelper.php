@@ -2,7 +2,7 @@
 
 namespace IMI\Util\Console\Helper;
 
-use IMI\Util\String;
+use IMI\Util\BinaryString;
 use Symfony\Component\Console\Helper\Helper as AbstractHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputAwareInterface;

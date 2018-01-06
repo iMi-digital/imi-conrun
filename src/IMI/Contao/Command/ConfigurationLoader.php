@@ -3,7 +3,7 @@
 namespace IMI\Contao\Command;
 
 use FSHL\Output;
-use IMI\Util\String;
+use IMI\Util\BinaryString;
 use IMI\Util\OperatingSystem;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -348,7 +348,7 @@ class ConfigurationLoader
      */
     protected function registerPluginConfigFile($contaoRootFolder, $file)
     {
-        if (String::startsWith($file->getPathname(), 'vfs://')) {
+        if (BinaryString::startsWith($file->getPathname(), 'vfs://')) {
             $path = $file->getPathname();
         } else {
             $path = $file->getRealPath();

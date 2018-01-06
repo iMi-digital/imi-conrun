@@ -8,7 +8,7 @@ use IMI\Util\ArrayFunctions;
 use IMI\Util\Console\Helper\TwigHelper;
 use IMI\Util\Console\Helper\ContaoHelper;
 use IMI\Util\OperatingSystem;
-use IMI\Util\String;
+use IMI\Util\BinaryString;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleEvent;
@@ -566,7 +566,7 @@ class Application extends BaseApplication
                 if (is_array($alias)) {
                     $aliasCommandName = key($alias);
                     if ($input->getFirstArgument() == $aliasCommandName) {
-                        $aliasCommandParams = array_slice(String::trimExplodeEmpty(' ', $alias[$aliasCommandName]), 1);
+                        $aliasCommandParams = array_slice(BinaryString::trimExplodeEmpty(' ', $alias[$aliasCommandName]), 1);
                         if (count($aliasCommandParams) > 0) {
                             // replace with aliased data
                             $mergedParams = array_merge(

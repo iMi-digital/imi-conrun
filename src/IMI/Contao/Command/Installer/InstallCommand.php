@@ -7,7 +7,7 @@ use IMI\Util\Console\Helper\ContaoHelper;
 use IMI\Util\Database as DatabaseUtils;
 use IMI\Util\Filesystem;
 use IMI\Util\OperatingSystem;
-use IMI\Util\String;
+use IMI\Util\BinaryString;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
@@ -309,7 +309,7 @@ HELP;
         $dbOptionsFound = 0;
         foreach ($dbOptions as $dbOption) {
             foreach ($this->getCliArguments() as $definedCliOption) {
-                if (String::startsWith($definedCliOption, $dbOption)) {
+                if (BinaryString::startsWith($definedCliOption, $dbOption)) {
                     $dbOptionsFound++;
                 }
             }
