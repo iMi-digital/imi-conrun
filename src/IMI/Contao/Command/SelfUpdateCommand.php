@@ -22,7 +22,6 @@ class SelfUpdateCommand extends AbstractContaoCommand
         $this
             ->setName('self-update')
             ->setAliases(array('selfupdate'))
-            ->addOption('unstable', null, InputOption::VALUE_NONE, 'Load unstable version from develop branch')
             ->setDescription('Updates imi-conrun.phar to the latest version.')
             ->setHelp(<<<EOT
 The <info>self-update</info> command checks github for newer
@@ -43,10 +42,39 @@ EOT
         return $this->getApplication()->isPharMode();
     }
 
+
+    protected function getLatestReleaseFromGithub($repository)
+    {
+        $opts = [
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'User-Agent: PHP'
+                ]
+            ]
+        ];
+
+        $context = stream_context_create($opts);
+
+        $releases = file_get_contents('https://api.github.com/repos/' . $repository . '/releases', false, $context);
+        $releases = json_decode($releases);
+
+        if (! isset($releases[0])) {
+            throw new \Exception('API error - no release found at GitHub repository ' . $repository);
+        }
+
+        $version = $releases[0]->tag_name;
+        $url     = $releases[0]->assets[0]->browser_download_url;
+
+        return [ $version, $url ];
+    }
+
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $tempFilename = dirname($localFilename) . '/' . basename($localFilename, '.phar').'-temp.phar';
+
 
         // check for permissions in local filesystem before start connection process
         if (!is_writable($tempDirectory = dirname($tempFilename))) {
@@ -60,18 +88,9 @@ EOT
         $io = new ConsoleIO($input, $output, $this->getHelperSet());
         $rfs = new RemoteFilesystem($io);
 
-        $loadUnstable = $input->getOption('unstable');
-        if ($loadUnstable) {
-            $versionTxtUrl = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/develop/version.txt';
-            $remoteFilename = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/develop/imi-conrun.phar';
-        } else {
-            $versionTxtUrl = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/version.txt';
-            $remoteFilename = 'https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/imi-conrun.phar';
-        }
+        list( $latest, $remoteFilename ) = $this->getLatestReleaseFromGithub('iMi-digital/imi-conrun');
 
-        $latest = trim($rfs->getContents('raw.githubusercontent.com', $versionTxtUrl, false));
-
-        if ($this->getApplication()->getVersion() !== $latest || $loadUnstable) {
+        if ($this->getApplication()->getVersion() !== $latest) {
             $output->writeln(sprintf("Updating to version <info>%s</info>.", $latest));
 
             $rfs->copy('raw.github.com', $remoteFilename, $tempFilename);
@@ -92,36 +111,6 @@ EOT
                 unset($phar);
                 @rename($tempFilename, $localFilename);
                 $output->writeln('<info>Successfully updated imi-conrun</info>');
-
-                if ($loadUnstable) {
-                    $changeLogContent = $rfs->getContents(
-                        'raw.github.com',
-                        'https://raw.github.com/netz98/imi-conrun/develop/changes.txt',
-                        false
-                    );
-                } else {
-                    $changeLogContent = $rfs->getContents(
-                        'raw.github.com',
-                        'https://raw.github.com/netz98/imi-conrun/master/changes.txt',
-                        false
-                    );
-                }
-
-                if ($changeLogContent) {
-                    $output->writeln($changeLogContent);
-                }
-
-                if ($loadUnstable) {
-                    $unstableFooterMessage = <<<UNSTABLE_FOOTER
-<comment>
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! DEVELOPMENT VERSION. DO NOT USE IN PRODUCTION !!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-</comment>
-UNSTABLE_FOOTER;
-                    $output->writeln($unstableFooterMessage);
-                }
-
                 $this->_exit();
             } catch (\Exception $e) {
                 @unlink($tempFilename);
