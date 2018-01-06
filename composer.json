@@ -5,7 +5,7 @@
     "support": {
         "issues": "https://github.com/netz98/imi-conrun/issues"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "homepage": "http://netz98.github.com/imi-conrun/",
     "keywords": ["contao", "installer", "cli", "conrun"],
     "require": {

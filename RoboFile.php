@@ -11,7 +11,7 @@ class RoboFile extends \Robo\Tasks
         $this->_exec('phing');
     }
 
-    public function iroboSign()
+    public function pharSign()
     {
         // signing key: a.menk@imi.de
         $this->_exec('gpg -u 5AECD819 --detach-sign --output imi-conrun.phar.asc imi-conrun.phar');
@@ -23,7 +23,7 @@ class RoboFile extends \Robo\Tasks
 	 *
 	 * @return \Robo\Result
 	 */
-    public function iroboPharPublish()
+    public function pharPublish()
     {
     	$token = $this->ask('Github Token');
     	$tag = $this->ask('Tag');
