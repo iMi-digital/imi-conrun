@@ -17,30 +17,23 @@ Installation
 
 There are two ways to install the tools:
 
+
+Use Phive
+"""""""""
+
+.. code-block:: sh
+
+    sudo phive install -g iMi-digital/imi-conrun
+
+
+See https://phar.io for details on PhiVE
+
 Download phar file
 """"""""""""""""""
 
-.. code-block:: sh
+Download the latest phar file from https://github.com/iMi-digital/imi-conrun/releases and save it was
+/usr/local/bin/imi-conrun and make it executable
 
-    wget https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/imi-conrun.phar
-
-or if you have problems with SSL certificate:
-
-.. code-block:: sh
-
-   curl -o imi-conrun.phar https://raw.githubusercontent.com/iMi-digital/imi-conrun/master/imi-conrun.phar
-
-You can make the .phar file executable.
-
-.. code-block:: sh
-
-    chmod +x ./imi-conrun.phar
-
-If you want to use command system wide you can copy it to `/usr/local/bin`.
-
-.. code-block:: sh
-
-    sudo cp ./imi-conrun.phar /usr/local/bin/
 
 **Debian / suhosin:**
 
