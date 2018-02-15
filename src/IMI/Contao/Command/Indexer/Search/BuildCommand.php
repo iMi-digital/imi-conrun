@@ -36,9 +36,16 @@ class BuildCommand extends AbstractContaoCommand
         $backend = new IndexerSearchBackend();
         $searchablePages = $backend->getSearchablePages();
 
-        if (!$GLOBALS['TL_CONFIG']['enableSearch']) {
-            $output->writeln('Search has to be enabled');
-            die();
+        $remote = false;
+
+        if ($remote) {
+            if ( ! $GLOBALS['TL_CONFIG']['enableSearch'] ) {
+                $output->writeln( 'Search has to be enabled' );
+                return;
+
+            }
+        } else {
+            \Config::set('enableSearch', true);
         }
 
         $arrContextOptions=array(
@@ -48,8 +55,39 @@ class BuildCommand extends AbstractContaoCommand
             ),
         );
 
+
         foreach ($searchablePages as $url) {
-            @file_get_contents($url, false, stream_context_create($arrContextOptions));
+            if ($remote) {
+                @file_get_contents( $url, false, stream_context_create( $arrContextOptions ) );
+            } else {
+                $urlParts = parse_url($url);
+                \Environment::set('host', $urlParts['host']);
+                \Environment::set('request', $urlParts['path']);
+                // Run the controller
+                $objPage = \Contao\FrontendIndex::getRootPageFromUrl();
+
+                if (!$objPage->protected) {
+                    $objPage->loadDetails();
+                }
+
+                $objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
+                $objRootPage = \Contao\FrontendIndex::getRootPageFromUrl();
+
+                $pageId = $objPage->id;
+                // Generate the page
+                switch ($objPage->type)
+                {
+                    case 'root':
+                    case 'error_404':
+                        break;
+                    case 'error_403':
+                        break;
+                    default:
+                        $objHandler->generate($objPage, true);
+                        break;
+                }
+
+            }
             $code = $http_response_header[0];
             if (strpos($code, ' 200 ') !== false) {
                 $output->writeln("<info>$code</info> $url");
