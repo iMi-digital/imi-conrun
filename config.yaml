@@ -56,6 +56,7 @@ commands:
     - IMI\Contao\Command\Admin\User\DeleteUserCommand
     - IMI\Contao\Command\Admin\User\ChangePasswordCommand
     - IMI\Contao\Command\Developer\Log\FollowCommand
+    - IMI\Contao\Command\Indexer\Search\BuildCommand
     - IMI\Contao\Command\ScriptCommand
     - IMI\Contao\Command\SelfUpdateCommand
     - IMI\Contao\Command\System\InfoCommand

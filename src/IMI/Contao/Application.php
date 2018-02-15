@@ -777,7 +777,7 @@ class Application extends BaseApplication
 
             \System::loadLanguageFile('default');
             // Restore autoloaders that might be removed by extensions that overwrite Varien/Autoload
-            $this->_restoreAutoloaders($autoloaders);
+            //$this->_restoreAutoloaders($autoloaders);
         }
     }
 

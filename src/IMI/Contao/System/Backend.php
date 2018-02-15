@@ -72,6 +72,5 @@ class Backend extends \Backend
         }
 
         return $result;
-
     }
 }

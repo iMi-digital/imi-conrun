@@ -509,4 +509,10 @@ abstract class AbstractContaoCommand extends Command
     {
         return in_array($type, array('git', 'hg'));
     }
+
+    protected function getClass($strClass)
+    {
+        return (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
+    }
+
 }
