@@ -21,6 +21,7 @@ class ImportCommand extends AbstractDatabaseCommand
             ->addOption('optimize', null, InputOption::VALUE_NONE, 'Convert verbose INSERTs to short ones before import (not working with compression)')
             ->addOption('drop', null, InputOption::VALUE_NONE, 'Drop and recreate database before import')
             ->addOption('drop-tables', null, InputOption::VALUE_NONE, 'Drop tables before import')
+            ->addOption('no-dump', null, InputOption::VALUE_NONE, 'Do not create a Dump before import')
             ->setDescription('Imports database with mysql cli client according to database defined in local.xml');
 
         $help = <<<HELP
@@ -145,6 +146,9 @@ HELP;
         }
         if( $input->getOption('drop-tables') ) {
             $dbHelper->dropTables($output);
+        }
+        if( !$input->getOption('no-dump')){
+            shell_exec('db:dump sql/backup_' . date('d_m_Y-G_i_s', time()) . '.sql --human-readable');
         }
 
         $this->doImport($output, $fileName, $exec);
